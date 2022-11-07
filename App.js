@@ -1,20 +1,10 @@
-import {
-  DefaultTheme,
-  NavigationContainer,
-  useIsFocused,
-} from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import LoginScreen from './screens/auth/LoginScreen'
 import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen'
 import MainScreen from './screens/MainScreen'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import ActivityDetailScreen from './screens/activities/ActivityDetailScreen'
-import {
-  ActivityDetail,
-  ForgotPassword,
-  Login,
-  Main,
-} from './constants/screens'
+import { ForgotPassword, Login, Main } from './constants/screens'
 
 const Stack = createNativeStackNavigator()
 
@@ -26,11 +16,6 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name={Main} component={MainScreen} />
-          <Stack.Screen
-            name={ActivityDetail}
-            component={ActivityDetailScreen}
-          />
-
           <Stack.Screen name={Login} component={LoginScreen} />
           <Stack.Screen
             name={ForgotPassword}

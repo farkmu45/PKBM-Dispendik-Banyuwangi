@@ -1,29 +1,26 @@
-import { View, Text, Button, Image } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from './HomeScreen'
 import InstitutionListScreen from './institutions/InstitutionListScreen'
 import { MaterialIcons } from '@expo/vector-icons'
-import { useIsFocused } from '@react-navigation/native'
 import * as NavigationBar from 'expo-navigation-bar'
 
 import colors from '../constants/colors'
 import NotificationListScreen from './notifications/NotificationListScreen'
-import ActivityListScreen from './activities/ActivityListScreen'
 import {
   Account,
-  ActivityList,
+  Activity,
   Home,
   InstitutitionList,
   NotificationList,
 } from '../constants/screens'
 import AccountScreen from './account/AccountScreen'
+import ActivityScreen from './activities/ActivityScreen'
 
 const Tab = createBottomTabNavigator()
 
 const MainScreen = () => {
-  const isFocused = useIsFocused()
-  isFocused ? NavigationBar.setBackgroundColorAsync(colors.primary[700]) : null
+  NavigationBar.setBackgroundColorAsync(colors.primary[700])
 
   return (
     <Tab.Navigator
@@ -33,7 +30,7 @@ const MainScreen = () => {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.primary[700],
-          height: 60
+          height: 60,
         },
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: colors.primary[900],
@@ -67,8 +64,8 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name={ActivityList}
-        component={ActivityListScreen}
+        name={Activity}
+        component={ActivityScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name='insert-drive-file' size={24} color={color} />

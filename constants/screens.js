@@ -2,6 +2,7 @@ export const NotificationList = 'NotificationList'
 
 export const InstitutitionList = 'InstitutionList'
 
+export const Activity = 'ActivityScreen'
 export const ActivityList = 'ActivityList'
 export const ActivityDetail = 'ActivityDetail'
 

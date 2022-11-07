@@ -6,6 +6,8 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { useNavigation } from '@react-navigation/native'
+import { ActivityDetail } from '../../constants/screens'
 
 const DATA = [
   {
@@ -59,6 +61,8 @@ export default function ActivityListScreen() {
   }
 
   const tabBarHeight = useBottomTabBarHeight()
+  const navigation = useNavigation()
+
   return (
     <SafeAreaView style={{ paddingBottom: tabBarHeight }}>
       <Header />
@@ -86,7 +90,9 @@ export default function ActivityListScreen() {
             <Pressable
               className='px-4 py-5'
               android_ripple={{ borderless: true }}
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate(ActivityDetail)
+              }}
             >
               <View className='justify-between flex-row'>
                 <Text className='text-lg text-primary-600 font-semibold'>
