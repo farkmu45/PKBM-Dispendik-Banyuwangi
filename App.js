@@ -1,20 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  DefaultTheme,
+  NavigationContainer,
+  useIsFocused,
+} from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import LoginScreen from './screens/auth/LoginScreen'
+import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen'
+import MainScreen from './screens/MainScreen'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import ActivityDetailScreen from './screens/activities/ActivityDetailScreen'
+import {
+  ActivityDetail,
+  ForgotPassword,
+  Login,
+  Main,
+} from './constants/screens'
+
+const Stack = createNativeStackNavigator()
+
+DefaultTheme.colors.background = 'white'
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name={Main} component={MainScreen} />
+          <Stack.Screen
+            name={ActivityDetail}
+            component={ActivityDetailScreen}
+          />
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+          <Stack.Screen name={Login} component={LoginScreen} />
+          <Stack.Screen
+            name={ForgotPassword}
+            component={ForgotPasswordScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  )
+}
