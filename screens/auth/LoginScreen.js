@@ -9,6 +9,7 @@ import {
   Pressable,
 } from 'react-native'
 import React from 'react'
+import ButtonComponent from '../../components/ButtonComponent'
 
 export default function LoginScreen({ navigation }) {
   return (
@@ -26,23 +27,18 @@ export default function LoginScreen({ navigation }) {
             className='border-b-2 border-gray-400 mt-6 text-base'
           />
 
-          <TouchableOpacity className='self-end mt-10'>
+          <TouchableOpacity
+            className='self-end mt-10'
+            onPress={() => navigation.navigate('ForgotPassword')}
+          >
             <Text className='text-base text-blue-400'>Lupa Sandi?</Text>
           </TouchableOpacity>
         </View>
-
-        <View className='bg-blue-500 rounded-full mt-5 w-full'>
-          <Pressable
-            className='p-4'
-            android_ripple={{ borderless: true }}
-            onPress={() => {
-              navigation.navigate('ForgotPassword')
-            }}
-          >
-            <Text>I'm pressable!</Text>
-          </Pressable>
-        </View>
       </View>
+      <ButtonComponent
+        title={'Masuk'}
+        onPress={() => navigation.navigate('Main')}
+      />
     </ScrollView>
   )
 }

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
 
-export default function Header({ showBackButton}) {
+export default function Header({ showBackButton }) {
   const navigation = useNavigation()
 
   return (

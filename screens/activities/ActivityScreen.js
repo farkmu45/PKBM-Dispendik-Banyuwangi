@@ -9,7 +9,11 @@ const Stack = createNativeStackNavigator()
 export default function ActivityScreen() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name={ActivityList} component={ActivityListScreen} />
+      <Stack.Screen
+        name={ActivityList}
+        screenOptions={{ animation: 'none' }}
+        component={ActivityListScreen}
+      />
       <Stack.Screen name={ActivityDetail} component={ActivityDetailScreen} />
     </Stack.Navigator>
   )

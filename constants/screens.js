@@ -10,6 +10,8 @@ export const Account = 'Account'
 
 export const Login = 'Login'
 export const ForgotPassword = 'ForgotPassword'
+export const LandingAdminPage = 'LandingPageAdmin'
+export const AddInstitutionScreen = 'AddInstitution'
 
 export const Home = 'Home'
 
