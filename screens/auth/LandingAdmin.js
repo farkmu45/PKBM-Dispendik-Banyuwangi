@@ -1,6 +1,6 @@
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import ButtonComponent from '../../components/ButtonComponent'
+import ButtonComponent from '../../components/Button'
 
 const LandingAdmin = ({ navigation }) => {
   return (

@@ -1,23 +1,20 @@
 import React from 'react'
-import {
-  Text, TextInput, View
-} from 'react-native'
+import { Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ButtonComponent from '../../components/ButtonComponent'
+import Button from '../../components/Button'
 import Header from '../../components/Header'
+import Input from '../../components/Input'
 
-
-export default function AddInstitutionScreen({ navigation }) {
+export default function AddInstitutionScreen() {
   return (
-    <SafeAreaView className='flex-1'>
-      <Header />
-      <View className='m-5'>
-        <View className='rounded p-5 bg-blue-300 w-full mt-6'>
-          <Text className=''>Nama Lembaga</Text>
-          <TextInput className='border-b-2 border-gray-400 text-base' />
+    <SafeAreaView>
+      <Header showBackButton={true} />
+      <View className='m-4 items-end'>
+        <View className='rounded p-5 bg-primary-100 w-full'>
+          <Input label='Nama Lembaga' />
         </View>
+        <Button className='mt-6'>Simpan</Button>
       </View>
-      <ButtonComponent title={'Simpan'} />
     </SafeAreaView>
   )
 }

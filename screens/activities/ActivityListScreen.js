@@ -1,12 +1,10 @@
-import { View, Text, FlatList, Pressable, TextInput } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import React, { useState } from 'react'
+import { FlatList, Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../../components/Header'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
-import { MaterialIcons } from '@expo/vector-icons'
 import colors from '../../constants/colors'
-import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useNavigation } from '@react-navigation/native'
 import { ActivityDetail } from '../../constants/screens'
 
 const DATA = [
@@ -44,7 +42,7 @@ const DATA = [
   },
 ]
 
-export default function ActivityListScreen() {
+export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState(new Date())
 
   const onChange = (event, selectedDate) => {
@@ -60,11 +58,8 @@ export default function ActivityListScreen() {
     })
   }
 
-  const tabBarHeight = useBottomTabBarHeight()
-  const navigation = useNavigation()
-
   return (
-    <SafeAreaView style={{ paddingBottom: tabBarHeight }}>
+    <SafeAreaView className='flex-1'>
       <Header />
 
       <FlatList
