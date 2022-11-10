@@ -1,18 +1,18 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import LoginScreen from './screens/auth/LoginScreen'
-import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen'
-import MainScreen from './screens/MainScreen'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import {
+  AddInstitutionScreen,
   ForgotPassword,
+  LandingAdminPage,
   Login,
   Main,
-  LandingAdminPage,
-  AddInstitutionScreen,
 } from './constants/screens'
+import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen'
 import LandingAdmin from './screens/auth/LandingAdmin'
+import LoginScreen from './screens/auth/LoginScreen'
 import AddInstitution from './screens/institutions/AddInstitution'
+import MainScreen from './screens/MainScreen'
 const Stack = createNativeStackNavigator()
 
 DefaultTheme.colors.background = 'white'
@@ -29,8 +29,8 @@ export default function App() {
           <Stack.Screen name={Login} component={LoginScreen} />
           <Stack.Screen name={LandingAdminPage} component={LandingAdmin} />
           <Stack.Screen
-            name={AddInstitutionScreen}
-            component={AddInstitution}
+            name={AddInstitution}
+            component={AddInstitutionScreen}
           />
           <Stack.Screen
             name={ForgotPassword}
