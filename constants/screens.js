@@ -1,6 +1,8 @@
 export const NotificationList = 'NotificationList'
 
+export const Institution = 'Institution'
 export const InstitutitionList = 'InstitutionList'
+export const AddInstitution = 'AddInstitution'
 
 export const Activity = 'ActivityScreen'
 export const ActivityList = 'ActivityList'

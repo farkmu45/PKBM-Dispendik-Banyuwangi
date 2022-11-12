@@ -48,14 +48,14 @@ export default function NotificationListScreen() {
       <FlatList
         data={DATA}
         ListHeaderComponent={() => (
-          <Text className='text-3xl font-bold px-5 mt-6 mb-2'>Notifikasi</Text>
+          <Text className='text-3xl font-bold px-4 mt-6 mb-2'>Notifikasi</Text>
         )}
         progressViewOffset={50}
         refreshing={false}
         onRefresh={() => {}}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View className='bg-primary-100 m-5 rounded-lg'>
+          <View className='bg-primary-100 mx-4 my-3 rounded-lg'>
             <Pressable
               className='px-4 py-5'
               android_ripple={{ borderless: true }}

@@ -10,6 +10,5 @@ module.exports = {
     700: '#0077b6',
     800: '#055b87',
     900: '#0a4b70',
-  },
-  bluePrimary: 'C1DFF0',
+  }
 }

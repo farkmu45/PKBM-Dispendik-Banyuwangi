@@ -1,15 +1,15 @@
-import { View, Text, Image, SafeAreaView, Pressable } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native'
 import { MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
+import React from 'react'
+import { Image, Pressable, View } from 'react-native'
 
 export default function Header({ showBackButton }) {
   const navigation = useNavigation()
 
   return (
     <>
-      <StatusBar backgroundColor='white' style='dark' />
+      <StatusBar backgroundColor='transparent' style='dark' />
       <View className='flex-row justify-between items-center bg-white px-3 py-3'>
         {showBackButton ? (
           <View className='rounded-full'>

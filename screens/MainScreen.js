@@ -1,21 +1,21 @@
-import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomeScreen from './HomeScreen'
-import InstitutionListScreen from './institutions/InstitutionListScreen'
 import { MaterialIcons } from '@expo/vector-icons'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import * as NavigationBar from 'expo-navigation-bar'
+import React from 'react'
+import HomeScreen from './HomeScreen'
 
 import colors from '../constants/colors'
-import NotificationListScreen from './notifications/NotificationListScreen'
 import {
   Account,
   Activity,
   Home,
-  InstitutitionList,
+  Institution,
   NotificationList,
 } from '../constants/screens'
 import AccountScreen from './account/AccountScreen'
 import ActivityScreen from './activities/ActivityScreen'
+import InstitutionScreen from './institutions/InstitutionScreen'
+import NotificationListScreen from './notifications/NotificationListScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -46,8 +46,8 @@ const MainScreen = () => {
         }}
       />
       <Tab.Screen
-        name={InstitutitionList}
-        component={InstitutionListScreen}
+        name={Institution}
+        component={InstitutionScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name='list' size={24} color={color} />
