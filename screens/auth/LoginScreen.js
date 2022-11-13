@@ -13,7 +13,11 @@ export default function LoginScreen({ route, navigation }) {
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
   return (
     <SafeAreaView className='bg-primary-100 flex-1'>
-      <StatusBar backgroundColor={colors.primary[100]} />
+      <StatusBar
+        backgroundColor={colors.primary[100]}
+        style='dark'
+        animated={true}
+      />
       <ScrollView>
         <View className='px-5 items-center py-10'>
           <Image source={require('../../assets/images/logo.png')} />

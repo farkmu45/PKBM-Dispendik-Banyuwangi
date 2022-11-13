@@ -38,6 +38,11 @@ export default function RegisterUserScreen({ navigation }) {
 
   return (
     <SafeAreaView className='bg-primary-100'>
+      <StatusBar
+        backgroundColor={colors.primary[100]}
+        style='dark'
+        animated={true}
+      />
       <ScrollView>
         <View className='rounded-full self-start m-3'>
           <Pressable
