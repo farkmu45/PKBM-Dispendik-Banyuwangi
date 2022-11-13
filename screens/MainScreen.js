@@ -10,7 +10,7 @@ import {
   Activity,
   Home,
   Institution,
-  NotificationList,
+  NotificationList
 } from '../constants/screens'
 import AccountScreen from './account/AccountScreen'
 import ActivityScreen from './activities/ActivityScreen'

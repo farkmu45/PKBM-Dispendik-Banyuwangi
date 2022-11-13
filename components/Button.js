@@ -16,7 +16,11 @@ export default function Button({ outline = false, children, style, onPress }) {
         android_ripple={{ borderless: true }}
         onPress={onPress}
       >
-        <Text className='text-base font-medium text-white text-center'>
+        <Text
+          className={`text-base font-medium text-center ${
+            outline ? 'text-primary-700' : 'text-white'
+          }`}
+        >
           {children}
         </Text>
       </Pressable>

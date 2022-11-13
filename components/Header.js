@@ -3,14 +3,18 @@ import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { Image, Pressable, View } from 'react-native'
+import { UserSelection } from '../constants/screens'
 
-export default function Header({ showBackButton }) {
+export default function Header({ showBackButton, style }) {
   const navigation = useNavigation()
 
   return (
     <>
-      <StatusBar backgroundColor='transparent' style='dark' />
-      <View className='flex-row justify-between items-center bg-white px-3 py-3'>
+      <StatusBar backgroundColor='transparent' style='dark' animated={true} />
+      <View
+        className='flex-row justify-between items-center bg-white px-3 py-3'
+        style={style}
+      >
         {showBackButton ? (
           <View className='rounded-full'>
             <Pressable
@@ -36,7 +40,11 @@ export default function Header({ showBackButton }) {
 
         <View className='flex-row'>
           <View className='rounded-full'>
-            <Pressable className='p-1' android_ripple={{ borderless: true }}>
+            <Pressable
+              onPress={() => navigation.replace(UserSelection)}
+              className='p-1'
+              android_ripple={{ borderless: true }}
+            >
               <MaterialIcons
                 name='power-settings-new'
                 size={25}

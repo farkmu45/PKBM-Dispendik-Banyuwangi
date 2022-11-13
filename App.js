@@ -2,21 +2,18 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import {
+  AddActivity,
   ForgotPassword,
-  LandingAdminPage,
   Login,
   Main,
-  LandingAdminPage,
-  AddInstitutionScreen,
-  RegisterScreenUser,
-  AddActivityScreen,
+  RegisterUser,
+  UserSelection,
 } from './constants/screens'
+import AddActivityScreen from './screens/activities/AddActivityScreen'
 import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen'
-import LandingAdmin from './screens/auth/LandingAdmin'
-import AddInstitution from './screens/institutions/AddInstitution'
-import RegisterUser from './screens/auth/RegisterUser'
-import AddActivity from './screens/activities/AddActivity'
 import LoginScreen from './screens/auth/LoginScreen'
+import RegisterUserScreen from './screens/auth/RegisterUserScreen'
+import UserSelectionScreen from './screens/auth/UserSelectionScreen'
 import MainScreen from './screens/MainScreen'
 
 const Stack = createNativeStackNavigator()
@@ -28,16 +25,14 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName='AddActivityScreen'
+          initialRouteName={UserSelection}
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name={Main} component={MainScreen} />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name={Login} component={LoginScreen} />
-          <Stack.Screen name={Main} component={MainScreen} />
-          <Stack.Screen name={LandingAdminPage} component={LandingAdmin} />
-          <Stack.Screen name={RegisterScreenUser} component={RegisterUser} />
-          <Stack.Screen name={AddActivityScreen} component={AddActivity} />
+          <Stack.Screen name={UserSelection} component={UserSelectionScreen} />
+          <Stack.Screen name={RegisterUser} component={RegisterUserScreen} />
+          <Stack.Screen name={AddActivity} component={AddActivityScreen} />
           <Stack.Screen
             name={ForgotPassword}
             component={ForgotPasswordScreen}

@@ -1,40 +1,29 @@
 import * as NavigationBar from 'expo-navigation-bar'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import {
-  Image,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '../../components/Button'
+import Input from '../../components/Input'
 import colors from '../../constants/colors'
-import { ForgotPassword, Main } from '../../constants/screens'
+import { ForgotPassword, Main, RegisterUser } from '../../constants/screens'
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ route, navigation }) {
+  const { isAdmin } = route.params
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
   return (
-    <SafeAreaView>
+    <SafeAreaView className='bg-primary-100 flex-1'>
       <StatusBar backgroundColor={colors.primary[100]} />
-      <ScrollView className='h-full bg-primary-100'>
+      <ScrollView>
         <View className='px-5 items-center py-10'>
           <Image source={require('../../assets/images/logo.png')} />
           <Text className='text-2xl mt-5'>Masuk dengan akun</Text>
           <View className='rounded-md p-5 bg-white w-full mt-6'>
-            <TextInput
-              placeholder='E-mail atau username'
-              className='border-b-2 border-gray-400 text-base'
-            />
-            <TextInput
-              placeholder='Kata sandi'
-              className='border-b-2 border-gray-400 mt-6 text-base'
-            />
+            <Input placeholder='E-mail atau username' />
+            <Input placeholder='Kata sandi' className='mt-2' />
 
             <TouchableOpacity
-              className='self-end mt-10'
+              className='self-end mt-6'
               onPress={() => navigation.navigate(ForgotPassword)}
             >
               <Text className='text-base text-primary-600'>Lupa Sandi?</Text>
@@ -46,6 +35,16 @@ export default function LoginScreen({ navigation }) {
           >
             Masuk
           </Button>
+
+          {!isAdmin ? (
+            <Button
+              outline={true}
+              className='self-stretch mt-3'
+              onPress={() => navigation.replace(RegisterUser)}
+            >
+              Daftar
+            </Button>
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>

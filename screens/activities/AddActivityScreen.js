@@ -5,15 +5,15 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Button,
   Pressable,
 } from 'react-native'
 import React, { useState } from 'react'
-import ButtonComponent from '../../components/ButtonComponent'
 import DropDownPicker from 'react-native-dropdown-picker'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import images from '../../constants/images'
-export default function AddActivity({ navigation }) {
+import Button from '../../components/Button'
+
+
+export default function AddActivityScreen({ navigation }) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(null)
   const [items, setItems] = useState([
@@ -79,7 +79,6 @@ export default function AddActivity({ navigation }) {
               onPress={showDatePicker}
               className='absolute right-0 self-center'
             >
-              <Image source={images.addIcon} className='w-7 h-7' />
             </TouchableOpacity>
           </View>
           <TextInput
@@ -94,7 +93,7 @@ export default function AddActivity({ navigation }) {
           />
         </View>
       </View>
-      <ButtonComponent
+      <Button
         title={'Kirim'}
         onPress={() => navigation.navigate('Main')}
       />
