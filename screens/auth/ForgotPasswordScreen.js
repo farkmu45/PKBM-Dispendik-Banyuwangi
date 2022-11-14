@@ -9,13 +9,9 @@ import * as NavigationBar from 'expo-navigation-bar'
 export default function ForgotPasswordScreen() {
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
   return (
-    <SafeAreaView>
-      <StatusBar
-        backgroundColor={colors.primary[100]}
-        style='dark'
-        animated={true}
-      />
-      <ScrollView className='h-full bg-primary-100'>
+    <SafeAreaView className='bg-primary-100 flex-1'>
+      <StatusBar backgroundColor='transparent' style='dark' />
+      <ScrollView>
         <View className='px-5 items-center py-10'>
           <Image source={require('../../assets/images/logo.png')} />
           <Text className='text-2xl mt-5'>Reset Password</Text>

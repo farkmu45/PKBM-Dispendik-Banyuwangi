@@ -12,11 +12,7 @@ export default UserSelectionScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView className='flex-1 bg-primary-100'>
-      <StatusBar
-        backgroundColor={colors.primary[100]}
-        style='dark'
-        animated={true}
-      />
+      <StatusBar backgroundColor='transparent' style='dark' />
       <ScrollView>
         <View className='items-center py-10 px-4'>
           <Image source={require('../../assets/images/logo.png')} />

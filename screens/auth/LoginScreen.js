@@ -13,11 +13,7 @@ export default function LoginScreen({ route, navigation }) {
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
   return (
     <SafeAreaView className='bg-primary-100 flex-1'>
-      <StatusBar
-        backgroundColor={colors.primary[100]}
-        style='dark'
-        animated={true}
-      />
+      <StatusBar backgroundColor='transparent' style='dark' />
       <ScrollView>
         <View className='px-5 items-center py-10'>
           <Image source={require('../../assets/images/logo.png')} />
@@ -44,7 +40,7 @@ export default function LoginScreen({ route, navigation }) {
             <Button
               outline={true}
               className='self-stretch mt-3'
-              onPress={() => navigation.replace(RegisterUser)}
+              onPress={() => navigation.navigate(RegisterUser)}
             >
               Daftar
             </Button>

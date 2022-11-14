@@ -10,7 +10,7 @@ export default function Header({ showBackButton, style }) {
 
   return (
     <>
-      <StatusBar backgroundColor='transparent' style='dark' animated={true} />
+      <StatusBar backgroundColor='transparent' style='dark' />
       <View
         className='flex-row justify-between items-center bg-white px-3 py-3'
         style={style}
@@ -29,11 +29,11 @@ export default function Header({ showBackButton, style }) {
           <View className='flex-row gap-2 pl-1'>
             <Image
               source={require('../assets/images/logo_2.png')}
-              className='w-9 h-9'
+              className='w-8 h-8'
             />
             <Image
               source={require('../assets/images/logo.png')}
-              className='w-9 h-9'
+              className='w-8 h-8'
             />
           </View>
         )}
