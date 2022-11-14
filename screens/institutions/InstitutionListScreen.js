@@ -2,6 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import React from 'react'
 import { FlatList, Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import { AddInstitution } from '../../constants/screens'
 
@@ -46,20 +47,10 @@ export default function InstitutionListScreen({ navigation }) {
       <Header />
       <FlatList
         data={DATA}
+        contentContainerStyle={{ paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View className='flex-row items-center justify-between px-4 mb-2 mt-6'>
             <Text className='text-3xl font-bold'>Daftar Lembaga</Text>
-            <View className='rounded-full overflow-hidden'>
-              <Pressable
-                className='p-1'
-                android_ripple={{ borderless: false }}
-                onPress={() => {
-                  navigation.navigate(AddInstitution)
-                }}
-              >
-                <MaterialIcons name='add' size={25} color='black' />
-              </Pressable>
-            </View>
           </View>
         )}
         progressViewOffset={50}
@@ -68,6 +59,7 @@ export default function InstitutionListScreen({ navigation }) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Item item={item} />}
       />
+      <FAB iconName='add' onPress={() => navigation.navigate(AddInstitution)} />
     </SafeAreaView>
   )
 }

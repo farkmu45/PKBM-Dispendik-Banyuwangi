@@ -3,9 +3,10 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import React, { useState } from 'react'
 import { FlatList, Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import colors from '../../constants/colors'
-import { ActivityDetail } from '../../constants/screens'
+import { ActivityDetail, AddActivity } from '../../constants/screens'
 
 const DATA = [
   {
@@ -64,6 +65,7 @@ export default function ActivityListScreen({ navigation }) {
 
       <FlatList
         data={DATA}
+        contentContainerStyle={{ paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View className='px-5 mt-6 mb-2'>
             <Text className='text-3xl font-bold'>Agenda Kegiatan</Text>
@@ -104,6 +106,8 @@ export default function ActivityListScreen({ navigation }) {
           </View>
         )}
       />
+
+      <FAB iconName='add' onPress={() => navigation.navigate(AddActivity)} />
     </SafeAreaView>
   )
 }
