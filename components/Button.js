@@ -7,12 +7,12 @@ export default function Button({ outline = false, children, style, onPress }) {
       style={style}
       className={
         outline
-          ? 'bg-transparent rounded-full border-2 border-primary-600'
-          : 'bg-primary-600 rounded-full'
+          ? 'bg-transparent rounded-full border-2 border-primary-700'
+          : 'bg-primary-700 rounded-full'
       }
     >
       <Pressable
-        className='px-4 py-3'
+        className='px-4 py-2'
         android_ripple={{ borderless: true }}
         onPress={onPress}
       >

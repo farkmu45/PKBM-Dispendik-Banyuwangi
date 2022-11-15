@@ -1,102 +1,105 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Pressable,
-} from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import * as ImagePicker from 'expo-image-picker'
 import React, { useState } from 'react'
-import DropDownPicker from 'react-native-dropdown-picker'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import { Image, ScrollView, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import colors from 'tailwindcss/colors'
 import Button from '../../components/Button'
-
+import Header from '../../components/Header'
+import Input from '../../components/Input'
 
 export default function AddActivityScreen({ navigation }) {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState(null)
-  const [items, setItems] = useState([
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' },
-  ])
-  //date
-  const [date, setDate] = useState(new Date(1598051730000))
-  const [mode, setMode] = useState('date')
-  const [show, setShow] = useState(false)
-
+  const [image, setImage] = useState(null)
+  const [date, setDate] = useState(new Date())
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
-    setShow(false)
     setDate(currentDate)
   }
 
-  const showMode = (currentMode) => {
-    if (Platform.OS === 'android') {
-      setShow(false)
-      // for iOS, add a button that closes the picker
-    }
-    setMode(currentMode)
-  }
-
   const showDatePicker = () => {
-    showMode('date')
+    DateTimePickerAndroid.open({
+      maximumDate: new Date(),
+      value: date,
+      onChange,
+      mode: 'date',
+    })
   }
 
-  const showTimepicker = () => {
-    showMode('time')
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [16, 9],
+        quality: 1,
+      })
+      console.log(result)
+      if (!result.canceled) {
+        setImage(result.uri)
+      }
+    } catch (error) {
+      alert('Terjadi kesalahan saat memilih gambar, silahkan coba kembali')
+    }
   }
+
   return (
-    <ScrollView className='h-full bg-blue-100'>
-      <View className='px-5 items-center py-10'>
-        <Image source={require('../../assets/images/logo.png')} />
-        <View className='rounded-md p-5 bg-white w-full mt-6'>
-          <TouchableOpacity>
-            <TextInput
-              placeholder='File'
-              className='border-b-2 my-3 border-gray-400 text-base'
+    <SafeAreaView className='flex-1'>
+      <Header showBackButton={true} />
+      <ScrollView>
+        <View className='p-4'>
+          <Text className='text-base font-medium'>Nama lembaga :</Text>
+          <Text className='text-base'>Lembaga 1</Text>
+
+          <View className='gap-y-3 mt-8'>
+            <View>
+              <Text className='text-base mb-2'>Gambar Kegiatan</Text>
+              {image ? (
+                <>
+                  <Image source={{ uri: image }} className='h-64' />
+                  <Button
+                    outline={true}
+                    className='self-end mt-3'
+                    onPress={pickImage}
+                  >
+                    Ubah
+                  </Button>
+                </>
+              ) : (
+                <View
+                  onTouchStart={pickImage}
+                  className='h-64 bg-gray-200 justify-center'
+                >
+                  <View className='items-center gap-y-1'>
+                    <MaterialIcons
+                      name='file-upload'
+                      size={33}
+                      color={colors.gray[500]}
+                    />
+                    <Text className='text-sm text-gray-500'>
+                      Upload gambar kegiatan
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
+            <Input
+              label='Tanggal'
+              caretHidden={true}
+              onTouchStart={showDatePicker}
+              value={date.toLocaleDateString()}
             />
-            <Button title='Choose a file' />
-          </TouchableOpacity>
-          <View className='flex-row border-b-2 my-3 border-gray-400'>
-            <Text className=' text-base my-4'>
-              selected: {date.toLocaleString()}
-            </Text>
-            {show && (
-              <DateTimePicker
-                testID='dateTimePicker'
-                value={date}
-                mode={mode}
-                is24Hour={true}
-                display='default'
-                onChange={onChange}
-                style={{
-                  width: '100%',
-                }}
-              />
-            )}
-            <TouchableOpacity
-              onPress={showDatePicker}
-              className='absolute right-0 self-center'
-            >
-            </TouchableOpacity>
+            <Input label='Nama Kegiatan' />
+            <Input
+              className='mb-5'
+              label='Keterangan'
+              multiline={true}
+              numberOfLines={6}
+            />
+            <Button onPress={() => navigation.navigate('Main')}>Kirim</Button>
           </View>
-          <TextInput
-            placeholder='Nama Kegiatan'
-            className='border-b-2 my-3 border-gray-400 mt-6 text-base'
-          />
-          <TextInput
-            placeholder='Keterangan'
-            multiline={true}
-            numberOfLines={6}
-            className='border-2 p-3 my-3 border-gray-400 mt-6 text-base'
-          />
         </View>
-      </View>
-      <Button
-        title={'Kirim'}
-        onPress={() => navigation.navigate('Main')}
-      />
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
