@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useState } from 'react'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { Alert, Image, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import colors from 'tailwindcss/colors'
 import Button from '../../components/Button'
@@ -39,7 +39,10 @@ export default function AddActivityScreen({ navigation }) {
         setImage(result.uri)
       }
     } catch (error) {
-      alert('Terjadi kesalahan saat memilih gambar, silahkan coba kembali')
+      Alert.alert(
+        'Kesalahan',
+        'Terjadi kesalahan saat memilih gambar, silahkan coba kembali'
+      )
     }
   }
 
