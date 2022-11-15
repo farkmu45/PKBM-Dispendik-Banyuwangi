@@ -1,8 +1,8 @@
-import { View, Text, TextInput, ScrollView } from 'react-native'
 import React from 'react'
+import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../../components/Header'
-import colors from '../../constants/colors'
+import Input from '../../components/Input'
 
 export default function AccountScreen() {
   return (
@@ -19,18 +19,5 @@ export default function AccountScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
-
-function Input({ label, style, ...props }) {
-  return (
-    <View style={style}>
-      <Text className='text-base text-gray-400'>{label}</Text>
-      <TextInput
-        {...props}
-        cursorColor={colors.primary[700]}
-        className='border-b-2 text-base pb-1 border-gray-400  focus:border-primary-700'
-      />
-    </View>
   )
 }

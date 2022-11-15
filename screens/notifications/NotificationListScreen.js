@@ -48,7 +48,7 @@ export default function NotificationListScreen() {
       <FlatList
         data={DATA}
         ListHeaderComponent={() => (
-          <Text className='text-3xl font-bold px-4 mt-6 mb-2'>Notifikasi</Text>
+          <Text className='text-3xl font-Bold px-4 mt-6 mb-2'>Notifikasi</Text>
         )}
         progressViewOffset={50}
         refreshing={false}
@@ -68,16 +68,16 @@ export default function NotificationListScreen() {
                 />
 
                 <View className='justify-between'>
-                  <Text className='text-lg text-primary-700 font-semibold'>
+                  <Text className='text-lg text-primary-700 font-SemiBold'>
                     Lembaga
                   </Text>
-                  <Text className='text-sm text-gray-400'>
+                  <Text className='text-sm font-Regular text-gray-400'>
                     dd/mm/yyyy 12:00 WIB
                   </Text>
                 </View>
               </View>
 
-              <Text className='mt-5 text-base'>Nama kegiatan</Text>
+              <Text className='mt-5 text-base font-Regular'>Nama kegiatan</Text>
             </Pressable>
           </View>
         )}

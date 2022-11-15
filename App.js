@@ -15,14 +15,45 @@ import LoginScreen from './screens/auth/LoginScreen'
 import RegisterUserScreen from './screens/auth/RegisterUserScreen'
 import UserSelectionScreen from './screens/auth/UserSelectionScreen'
 import MainScreen from './screens/MainScreen'
+import * as SplashScreen from 'expo-splash-screen'
+
+import {
+  useFonts,
+  Inter_900Black,
+  Inter_800ExtraBold,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_500Medium,
+  Inter_400Regular,
+} from '@expo-google-fonts/inter'
+import { useCallback } from 'react'
 
 const Stack = createNativeStackNavigator()
 
 DefaultTheme.colors.background = 'white'
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Inter_900Black,
+    Inter_800ExtraBold,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_500Medium,
+    Inter_400Regular,
+  })
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync()
+    }
+  }, [fontsLoaded])
+
+  if (!fontsLoaded) {
+    return null
+  }
+
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider onLayout={onLayoutRootView}>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName={UserSelection}

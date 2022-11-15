@@ -14,9 +14,9 @@ export default function ForgotPasswordScreen() {
       <ScrollView>
         <View className='px-5 items-center py-10'>
           <Image source={require('../../assets/images/logo.png')} />
-          <Text className='text-2xl mt-5'>Reset Password</Text>
+          <Text className='text-2xl mt-5 font-SemiBold'>Reset Password</Text>
           <View className='rounded-md p-5 bg-white w-full mt-6'>
-            <Text className='text-lg text-black mb-5'>
+            <Text className='text-base text-black mb-5 font-Regular'>
               Masukkan email yang terdaftar untuk mendapatkan sandi baru.
             </Text>
             <TextInput

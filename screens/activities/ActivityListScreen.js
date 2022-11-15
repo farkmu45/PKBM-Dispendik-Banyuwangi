@@ -68,13 +68,15 @@ export default function ActivityListScreen({ navigation }) {
         contentContainerStyle={{ paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View className='px-5 mt-6 mb-2'>
-            <Text className='text-3xl font-bold'>Agenda Kegiatan</Text>
+            <Text className='text-3xl font-Bold'>Agenda Kegiatan</Text>
 
             <View
               onTouchStart={showDatePicker}
               className='border-[1px] border-gray-400 mt-6 px-3 py-2 rounded-full'
             >
-              <Text className='text-base'>{date.toLocaleString('ko-KR')}</Text>
+              <Text className='text-base font-Regular'>
+                {date.toLocaleString('ko-KR')}
+              </Text>
             </View>
           </View>
         )}
@@ -92,7 +94,7 @@ export default function ActivityListScreen({ navigation }) {
               }}
             >
               <View className='justify-between flex-row'>
-                <Text className='text-lg text-primary-600 font-semibold'>
+                <Text className='text-lg text-primary-600 font-SemiBold'>
                   Lembaga
                 </Text>
 

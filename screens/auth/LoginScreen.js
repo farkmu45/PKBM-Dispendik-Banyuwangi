@@ -17,7 +17,7 @@ export default function LoginScreen({ route, navigation }) {
       <ScrollView>
         <View className='px-5 items-center py-10'>
           <Image source={require('../../assets/images/logo.png')} />
-          <Text className='text-2xl mt-5'>Masuk dengan akun</Text>
+          <Text className='text-2xl mt-5 font-Medium'>Masuk dengan akun</Text>
           <View className='rounded-md p-5 bg-white w-full mt-6'>
             <Input placeholder='E-mail atau username' />
             <Input placeholder='Kata sandi' className='mt-2' />
@@ -26,7 +26,9 @@ export default function LoginScreen({ route, navigation }) {
               className='self-end mt-6'
               onPress={() => navigation.navigate(ForgotPassword)}
             >
-              <Text className='text-base text-primary-600'>Lupa Sandi?</Text>
+              <Text className='text-sm font-Medium text-primary-600'>
+                Lupa Sandi?
+              </Text>
             </TouchableOpacity>
           </View>
           <Button

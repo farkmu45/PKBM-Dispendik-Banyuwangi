@@ -16,7 +16,7 @@ export default UserSelectionScreen = ({ navigation }) => {
       <ScrollView>
         <View className='items-center py-10 px-4'>
           <Image source={require('../../assets/images/logo.png')} />
-          <Text className='mt-5 text-2xl font-medium'>Masuk sebagai</Text>
+          <Text className='mt-5 text-2xl font-Regular'>Masuk sebagai</Text>
           <Button
             className='self-stretch mt-6'
             onPress={() =>

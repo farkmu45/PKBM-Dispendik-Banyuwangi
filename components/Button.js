@@ -17,7 +17,7 @@ export default function Button({ outline = false, children, style, onPress }) {
         onPress={onPress}
       >
         <Text
-          className={`text-base font-medium text-center ${
+          className={`text-base font-Medium text-center ${
             outline ? 'text-primary-700' : 'text-white'
           }`}
         >

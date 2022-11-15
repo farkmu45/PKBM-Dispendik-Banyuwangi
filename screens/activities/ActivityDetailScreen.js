@@ -12,9 +12,9 @@ export default function ActivityDetailScreen() {
 
       <ScrollView contentContainerStyle={{ paddingBottom: tabBarHeight }}>
         <View className='px-4'>
-          <Text className='text-base font-semibold'>Nama Lembaga :</Text>
+          <Text className='text-base font-SemiBold'>Nama Lembaga :</Text>
           <Text className='text-base'>Lembaga 1</Text>
-          <Text className='text-base font-semibold mt-3'>Gambar :</Text>
+          <Text className='text-base font-SemiBold mt-3'>Gambar :</Text>
           <Image
             source={require('../../assets/icon.png')}
             className='w-full h-72 mt-1'

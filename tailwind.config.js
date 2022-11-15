@@ -10,6 +10,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        Black: 'Inter_900Black',
+        ExtraBold: 'Inter_800ExtraBold',
+        Bold: 'Inter_700Bold',
+        SemiBold: 'Inter_600SemiBold',
+        Medium: 'Inter_500Medium',
+        Regular: 'Inter_400Regular',
+      },
       colors,
     },
   },

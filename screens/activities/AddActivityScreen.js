@@ -51,12 +51,14 @@ export default function AddActivityScreen({ navigation }) {
       <Header showBackButton={true} />
       <ScrollView>
         <View className='p-4'>
-          <Text className='text-base font-medium'>Nama lembaga :</Text>
-          <Text className='text-base'>Lembaga 1</Text>
+          <Text className='text-base font-SemiBold'>Nama lembaga :</Text>
+          <Text className='text-base font-Regular'>Lembaga 1</Text>
 
           <View className='gap-y-3 mt-8'>
             <View>
-              <Text className='text-base mb-2'>Gambar Kegiatan</Text>
+              <Text className='text-base mb-2 font-Regular'>
+                Gambar Kegiatan
+              </Text>
               {image ? (
                 <>
                   <Image source={{ uri: image }} className='h-64' />
@@ -79,7 +81,7 @@ export default function AddActivityScreen({ navigation }) {
                       size={33}
                       color={colors.gray[500]}
                     />
-                    <Text className='text-sm text-gray-500'>
+                    <Text className='text-sm font-Regular text-gray-500'>
                       Upload gambar kegiatan
                     </Text>
                   </View>

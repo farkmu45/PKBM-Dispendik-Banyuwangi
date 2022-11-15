@@ -50,7 +50,7 @@ export default function InstitutionListScreen({ navigation }) {
         contentContainerStyle={{ paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View className='flex-row items-center justify-between px-4 mb-2 mt-6'>
-            <Text className='text-3xl font-bold'>Daftar Lembaga</Text>
+            <Text className='text-3xl font-Bold'>Daftar Lembaga</Text>
           </View>
         )}
         progressViewOffset={50}
@@ -73,7 +73,7 @@ function Item({ item }) {
         onPress={() => {}}
       >
         <View className='flex-row justify-between'>
-          <Text className='text-base font-medium self-center'>
+          <Text className='text-base font-Medium self-center'>
             {item.title}
           </Text>
           <View className='flex-row self-center gap-2'>
