@@ -72,7 +72,7 @@ export default function AddActivityScreen({ navigation }) {
                 </>
               ) : (
                 <View
-                  onTouchStart={pickImage}
+                  onTouchEnd={pickImage}
                   className='h-64 bg-gray-200 justify-center'
                 >
                   <View className='items-center gap-y-1'>
@@ -91,13 +91,14 @@ export default function AddActivityScreen({ navigation }) {
             <Input
               label='Tanggal'
               caretHidden={true}
-              onTouchStart={showDatePicker}
+              onTouchEnd={showDatePicker}
               value={date.toLocaleDateString()}
             />
             <Input label='Nama Kegiatan' />
             <Input
               className='mb-5'
               label='Keterangan'
+              textAlignVertical='top'
               multiline={true}
               numberOfLines={6}
             />

@@ -15,8 +15,12 @@ export default UserSelectionScreen = ({ navigation }) => {
       <StatusBar backgroundColor='transparent' style='dark' />
       <ScrollView>
         <View className='items-center py-10 px-4'>
-          <Image source={require('../../assets/images/logo.png')} />
-          <Text className='mt-5 text-2xl font-Regular'>Masuk sebagai</Text>
+          <Image
+            className='h-40'
+            resizeMode='contain'
+            source={require('../../assets/images/logo.png')}
+          />
+          <Text className='mt-16 text-2xl font-Medium'>Masuk sebagai</Text>
           <Button
             className='self-stretch mt-6'
             onPress={() =>

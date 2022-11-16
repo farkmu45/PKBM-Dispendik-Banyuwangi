@@ -16,8 +16,12 @@ export default function LoginScreen({ route, navigation }) {
       <StatusBar backgroundColor='transparent' style='dark' />
       <ScrollView>
         <View className='px-5 items-center py-10'>
-          <Image source={require('../../assets/images/logo.png')} />
-          <Text className='text-2xl mt-5 font-Medium'>Masuk dengan akun</Text>
+          <Image
+            className='h-40'
+            resizeMode='contain'
+            source={require('../../assets/images/logo.png')}
+          />
+          <Text className='text-2xl mt-10 font-Medium'>Masuk dengan akun</Text>
           <View className='rounded-md p-5 bg-white w-full mt-6'>
             <Input placeholder='E-mail atau username' />
             <Input placeholder='Kata sandi' className='mt-2' />

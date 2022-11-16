@@ -50,7 +50,11 @@ export default function RegisterUserScreen({ navigation }) {
           </Pressable>
         </View>
         <View className='px-4 items-center'>
-          <Image source={require('../../assets/images/logo.png')} />
+          <Image
+            className='h-40'
+            resizeMode='contain'
+            source={require('../../assets/images/logo.png')}
+          />
           <View className='rounded-md px-4 flex-col gap-y-1 bg-white mt-6'>
             <Input placeholder='Nama' />
             <Input
