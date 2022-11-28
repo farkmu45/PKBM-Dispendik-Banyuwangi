@@ -1,50 +1,33 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import React, { useState } from 'react'
-import { FlatList, Pressable, Text, View } from 'react-native'
+import { useQuery } from '@tanstack/react-query'
+import React, { useContext, useState } from 'react'
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import colors from '../../constants/colors'
 import { ActivityDetail, AddActivity } from '../../constants/screens'
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: '1',
-    title: 'Third Item',
-  },
-  {
-    id: '2',
-    title: 'Third Item',
-  },
-  {
-    id: '3',
-    title: 'Third Item',
-  },
-  {
-    id: '4',
-    title: 'Third Item',
-  },
-  {
-    id: '5',
-    title: 'Third Item',
-  },
-]
+import { RoleContext } from '../../contexts'
+import api from '../../network/api'
 
 export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState(new Date())
+  const role = useContext(RoleContext)
+
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ['activityData'],
+    queryFn: async () => {
+      const result = await api.get('/activities')
+      return result
+    },
+  })
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
@@ -59,12 +42,31 @@ export default function ActivityListScreen({ navigation }) {
     })
   }
 
+  if (isLoading)
+    return (
+      <SafeAreaView>
+        <ActivityIndicator
+          className='mt-10'
+          size={'large'}
+          color={colors.primary[700]}
+        />
+      </SafeAreaView>
+    )
+
+  if (error) {
+    return (
+      <SafeAreaView>
+        <Text>Error</Text>
+      </SafeAreaView>
+    )
+  }
+
   return (
     <SafeAreaView className='flex-1'>
       <Header />
 
       <FlatList
-        data={DATA}
+        data={data.data.data}
         contentContainerStyle={{ paddingBottom: 90 }}
         ListHeaderComponent={() => (
           <View className='px-5 mt-6 mb-2'>
@@ -81,8 +83,8 @@ export default function ActivityListScreen({ navigation }) {
           </View>
         )}
         progressViewOffset={50}
-        refreshing={false}
-        onRefresh={() => {}}
+        refreshing={isLoading}
+        onRefresh={refetch}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View className='bg-primary-100 m-4 rounded-lg'>
@@ -95,7 +97,7 @@ export default function ActivityListScreen({ navigation }) {
             >
               <View className='justify-between flex-row'>
                 <Text className='text-lg text-primary-600 font-SemiBold'>
-                  Lembaga
+                  {item.name}
                 </Text>
 
                 <MaterialIcons

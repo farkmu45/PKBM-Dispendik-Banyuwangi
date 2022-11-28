@@ -10,7 +10,7 @@ import {
   Activity,
   Home,
   Institution,
-  NotificationList
+  NotificationList,
 } from '../constants/screens'
 import AccountScreen from './account/AccountScreen'
 import ActivityScreen from './activities/ActivityScreen'
@@ -19,7 +19,7 @@ import NotificationListScreen from './notifications/NotificationListScreen'
 
 const Tab = createBottomTabNavigator()
 
-const MainScreen = () => {
+export default function MainScreen() {
   NavigationBar.setBackgroundColorAsync(colors.primary[700])
 
   return (
@@ -84,5 +84,3 @@ const MainScreen = () => {
     </Tab.Navigator>
   )
 }
-
-export default MainScreen
