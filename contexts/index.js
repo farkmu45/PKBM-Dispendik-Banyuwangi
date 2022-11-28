@@ -1,5 +1,8 @@
 import { createContext } from 'react'
 
-const RoleContext = createContext({ isAdmin: false })
+const AuthContext = createContext({
+  auth: { isAdmin: false, signedIn: false },
+  setAuth() {},
+})
 
-export { RoleContext }
+export { AuthContext }

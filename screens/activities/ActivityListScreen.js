@@ -7,19 +7,19 @@ import {
   FlatList,
   Pressable,
   Text,
-  View,
+  View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import colors from '../../constants/colors'
 import { ActivityDetail, AddActivity } from '../../constants/screens'
-import { RoleContext } from '../../contexts'
+import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
 export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState(new Date())
-  const role = useContext(RoleContext)
+  const { auth } = useContext(AuthContext)
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['activityData'],
@@ -46,7 +46,7 @@ export default function ActivityListScreen({ navigation }) {
     return (
       <SafeAreaView>
         <ActivityIndicator
-          className='mt-10'
+          className='mt-20'
           size={'large'}
           color={colors.primary[700]}
         />

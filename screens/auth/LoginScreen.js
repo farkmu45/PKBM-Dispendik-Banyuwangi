@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import * as NavigationBar from 'expo-navigation-bar'
 import * as SecureStore from 'expo-secure-store'
 import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -24,12 +24,14 @@ import {
   Main,
   RegisterUser,
 } from '../../constants/screens'
+import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
 export default function LoginScreen({ route, navigation }) {
   const { isAdmin } = route.params
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const auth = useContext(AuthContext)
 
   const mutation = useMutation({
     mutationFn: async (params) => {
@@ -38,11 +40,13 @@ export default function LoginScreen({ route, navigation }) {
     },
     onSuccess: async (result) => {
       if (result.ok) {
-        const tokenData = data.data.token
-        const roleData = data.data.role_id
+        const tokenData = result.data.data.token
+        const roleData = result.data.data.role_id
         api.setHeader('Authorization', `Bearer ${tokenData}`)
         await SecureStore.setItemAsync('token', tokenData)
         await SecureStore.setItemAsync('role', roleData)
+
+        auth.setAuth({ signedIn: true, isAdmin: roleData == 1 ? false : true })
 
         navigation.replace(Main, { screen: Home })
       } else {
@@ -85,7 +89,7 @@ export default function LoginScreen({ route, navigation }) {
             </View>
           </Modal>
         ) : null}
-        
+
         <View className='px-5 items-center py-10'>
           <Image
             className='h-40'

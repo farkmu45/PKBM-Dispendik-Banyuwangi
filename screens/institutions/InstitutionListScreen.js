@@ -14,11 +14,11 @@ import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import colors from '../../constants/colors'
 import { AddInstitution } from '../../constants/screens'
-import { RoleContext } from '../../contexts'
+import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
 export default function InstitutionListScreen({ navigation }) {
-  const role = useContext(RoleContext)
+  const { auth } = useContext(AuthContext)
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['institutionData'],
@@ -87,9 +87,9 @@ export default function InstitutionListScreen({ navigation }) {
             refreshing={isLoading}
             onRefresh={() => refetch()}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <Item item={item} role={role} />}
+            renderItem={({ item }) => <Item item={item} auth={auth} />}
           />
-          {role.isAdmin ? (
+          {auth.isAdmin ? (
             <FAB
               iconName='add'
               onPress={() => navigation.navigate(AddInstitution)}
@@ -101,7 +101,7 @@ export default function InstitutionListScreen({ navigation }) {
   )
 }
 
-function Item({ item }, role) {
+function Item({ item }, auth) {
   return (
     <View className='bg-slate-100 mx-4 my-3 rounded-lg'>
       <Pressable
@@ -114,7 +114,7 @@ function Item({ item }, role) {
             <Text className='text-base font-Medium w-full'>{item.name}</Text>
           </View>
           <View className='flex-row self-center gap-x-2 ml-2'>
-            {role.isAdmin ? (
+            {auth.isAdmin ? (
               <>
                 <View className='bg-yellow-600 rounded-lg'>
                   <Pressable

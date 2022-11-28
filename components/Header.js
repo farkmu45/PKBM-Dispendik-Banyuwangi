@@ -8,6 +8,7 @@ import { UserSelection } from '../constants/screens'
 export default function Header({ showBackButton, style }) {
   const navigation = useNavigation()
 
+
   return (
     <>
       <StatusBar backgroundColor='transparent' style='dark' />
