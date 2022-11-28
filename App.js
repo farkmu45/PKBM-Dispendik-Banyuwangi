@@ -44,13 +44,18 @@ export default function App() {
 
   useEffect(() => {
     const bootstrapAsync = async () => {
+      // await SecureStore.deleteItemAsync('token')
       const token = await SecureStore.getItemAsync('token')
       if (token) {
         setSignedIn(true)
         api.setHeader(`Authorization: Bearer ${token}`)
-
         const role = await SecureStore.getItemAsync('role')
         setRole(role)
+        const profile = await api.get('/profile')
+
+        if (profile.ok) {
+          setSignedIn(false)
+        }
       }
     }
     bootstrapAsync()

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import React, { useContext } from 'react'
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Pressable,
   Text,
@@ -27,6 +28,27 @@ export default function InstitutionListScreen({ navigation }) {
     },
   })
 
+  const showErrorAlert = () =>
+    Alert.alert(
+      'Kesalahan',
+      'Terjadi kesalahan saat mengambil data, ulang kembali?',
+      [
+        {
+          text: 'Ya',
+          onPress: refetch,
+          style: 'default',
+        },
+        {
+          text: 'Tidak',
+          onPress: () => Alert.alert('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )
+
   if (isLoading)
     return (
       <SafeAreaView>
@@ -41,7 +63,7 @@ export default function InstitutionListScreen({ navigation }) {
   if (error) {
     return (
       <SafeAreaView>
-        <Text>Error</Text>
+        <Alert.alert />
       </SafeAreaView>
     )
   }

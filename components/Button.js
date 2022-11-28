@@ -1,7 +1,13 @@
 import React from 'react'
 import { Pressable, Text, View } from 'react-native'
 
-export default function Button({ outline = false, children, style, onPress }) {
+export default function Button({
+  outline = false,
+  children,
+  style,
+  onPress,
+  ...props
+}) {
   return (
     <View
       style={style}
@@ -12,6 +18,7 @@ export default function Button({ outline = false, children, style, onPress }) {
       }
     >
       <Pressable
+        {...props}
         className='px-4 py-2'
         android_ripple={{ borderless: true }}
         onPress={onPress}
