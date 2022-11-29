@@ -7,7 +7,7 @@ import {
   FlatList,
   Pressable,
   Text,
-  View
+  View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FAB from '../../components/FAB'
@@ -69,7 +69,7 @@ export default function ActivityListScreen({ navigation }) {
         data={data.data.data}
         contentContainerStyle={{ paddingBottom: 90 }}
         ListHeaderComponent={() => (
-          <View className='px-5 mt-6 mb-2'>
+          <View className='px-5 mt-6 mb-7'>
             <Text className='text-3xl font-Bold'>Agenda Kegiatan</Text>
 
             <View
@@ -87,24 +87,30 @@ export default function ActivityListScreen({ navigation }) {
         onRefresh={refetch}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View className='bg-primary-100 m-4 rounded-lg'>
+          <View className='bg-primary-100 mx-4 my-3 rounded-lg'>
             <Pressable
               className='px-4 py-5'
               android_ripple={{ borderless: true }}
               onPress={() => {
-                navigation.navigate(ActivityDetail)
+                navigation.navigate(ActivityDetail, {
+                  activityId: item.id,
+                })
               }}
             >
-              <View className='justify-between flex-row'>
-                <Text className='text-lg text-primary-600 font-SemiBold'>
-                  {item.name}
-                </Text>
+              <View className='flex-row items-center'>
+                <View className='shrink mr-3'>
+                  <Text className='text-base text-primary-600 font-SemiBold'>
+                    {item.name}
+                  </Text>
+                </View>
 
-                <MaterialIcons
-                  name='keyboard-arrow-right'
-                  size={24}
-                  color={colors.primary[600]}
-                />
+                <View className='block ml-auto'>
+                  <MaterialIcons
+                    name='keyboard-arrow-right'
+                    size={24}
+                    color={colors.primary[600]}
+                  />
+                </View>
               </View>
             </Pressable>
           </View>

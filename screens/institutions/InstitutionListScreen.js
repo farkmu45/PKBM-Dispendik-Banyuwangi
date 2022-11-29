@@ -28,50 +28,31 @@ export default function InstitutionListScreen({ navigation }) {
     },
   })
 
-  const showErrorAlert = () =>
-    Alert.alert(
-      'Kesalahan',
-      'Terjadi kesalahan saat mengambil data, ulang kembali?',
-      [
-        {
-          text: 'Ya',
-          onPress: refetch,
-          style: 'default',
-        },
-        {
-          text: 'Tidak',
-          onPress: () => Alert.alert('Cancel Pressed'),
-          style: 'cancel',
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    )
-
   if (isLoading)
     return (
       <SafeAreaView>
         <ActivityIndicator
-          className='mt-10'
+          className='mt-20'
           size={'large'}
           color={colors.primary[700]}
         />
       </SafeAreaView>
     )
 
-  if (error) {
-    return (
-      <SafeAreaView>
-        <Alert.alert />
-      </SafeAreaView>
-    )
-  }
-
   return (
     <SafeAreaView className='flex-1'>
-      {error || !data.data ? (
-        <Text>Error</Text>
+      {error || !data.ok ? (
+        Alert.alert(
+          'Kesalahan',
+          'Terjadi kesalahan saat mengambil data, silahkan ulangi kembali',
+          [
+            {
+              text: 'Ya',
+              onPress: refetch,
+              style: 'default',
+            },
+          ]
+        )
       ) : (
         <>
           <Header />
@@ -103,9 +84,9 @@ export default function InstitutionListScreen({ navigation }) {
 
 function Item({ item }, auth) {
   return (
-    <View className='bg-slate-100 mx-4 my-3 rounded-lg'>
+    <View className='mx-4 my-3 rounded-lg'>
       <Pressable
-        className='px-3 py-5 bg-blue-100'
+        className='px-3 py-5 bg-primary-100'
         android_ripple={{ borderless: true }}
         onPress={() => {}}
       >
