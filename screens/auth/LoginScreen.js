@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
+import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
 
 import {
@@ -73,22 +74,7 @@ export default function LoginScreen({ route, navigation }) {
             )
           : null}
 
-        {mutation.isLoading ? (
-          <Modal
-            transparent={true}
-            animationType='fade'
-            statusBarTranslucent={true}
-          >
-            <View className='flex-1 bg-black/20 justify-center z-30 px-10'>
-              <View className='flex-row items-center p-5 bg-white rounded-md'>
-                <ActivityIndicator size='large' color={colors.primary[500]} />
-                <Text className='font-Regular text-base ml-3'>
-                  Harap Tunggu
-                </Text>
-              </View>
-            </View>
-          </Modal>
-        ) : null}
+        {mutation.isLoading ? <LoadingModal /> : null}
 
         <View className='px-5 items-center py-10'>
           <Image

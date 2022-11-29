@@ -1,17 +1,56 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
+import * as SecureStore from 'expo-secure-store'
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
-import { Image, Pressable, View } from 'react-native'
-import { UserSelection } from '../constants/screens'
+import React, { useContext } from 'react'
+import { Alert, Image, Pressable, View } from 'react-native'
+import { AuthContext } from '../contexts'
+import api from '../network/api'
+import UserSelectionScreen from '../screens/auth/UserSelectionScreen'
+import LoadingModal from './LoadingModal'
 
 export default function Header({ showBackButton, style }) {
   const navigation = useNavigation()
+  const { setAuth } = useContext(AuthContext)
 
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const result = await api.post('/logout')
+      return result
+    },
+    onSuccess: async (result) => {
+      if (result.ok) {
+        setAuth({ signedIn: false })
+        await SecureStore.deleteItemAsync('token')
+        delete api.headers['Authorization']
+        navigation.replace(UserSelectionScreen)
+      } else {
+        return Alert.alert(
+          'Kesalahan',
+          'Terjadi kesalahan saat logout, silahkan ulang kembali',
+          [{ text: 'OK' }]
+        )
+      }
+    },
+  })
+
+  function logout() {
+    Alert.alert('Peringatan', 'Apakah anda yakin ingin keluar dari aplikasi?', [
+      {
+        text: 'Ya',
+        style: 'default',
+        onPress: () => mutation.mutate(),
+      },
+      { text: 'Tidak', style: 'cancel' },
+    ])
+  }
 
   return (
     <>
       <StatusBar backgroundColor='transparent' style='dark' />
+      {mutation.isLoading ? <LoadingModal /> : null}
+
       <View
         className='flex-row justify-between items-center bg-white px-3 py-3'
         style={style}
@@ -42,7 +81,7 @@ export default function Header({ showBackButton, style }) {
         <View className='flex-row'>
           <View className='rounded-full'>
             <Pressable
-              onPress={() => navigation.replace(UserSelection)}
+              onPress={logout}
               className='p-1'
               android_ripple={{ borderless: true }}
             >
