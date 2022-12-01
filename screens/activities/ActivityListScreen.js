@@ -117,7 +117,9 @@ export default function ActivityListScreen({ navigation }) {
         )}
       />
 
-      <FAB iconName='add' onPress={() => navigation.navigate(AddActivity)} />
+      {!auth.isAdmin ? (
+        <FAB iconName='add' onPress={() => navigation.navigate(AddActivity)} />
+      ) : null}
     </SafeAreaView>
   )
 }
