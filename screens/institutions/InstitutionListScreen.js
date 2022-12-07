@@ -28,16 +28,16 @@ export default function InstitutionListScreen({ navigation }) {
     },
   })
 
-  if (isLoading)
+  if (isLoading) {
     return (
-      <SafeAreaView>
-        <ActivityIndicator
-          className='mt-20'
-          size={'large'}
-          color={colors.primary[700]}
-        />
+      <SafeAreaView className='flex-1'>
+        <Header />
+        <View className='flex-1 justify-center'>
+          <ActivityIndicator size={50} color={colors.primary[700]} />
+        </View>
       </SafeAreaView>
     )
+  }
 
   return (
     <SafeAreaView className='flex-1'>
@@ -70,12 +70,10 @@ export default function InstitutionListScreen({ navigation }) {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <Item item={item} auth={auth} />}
           />
-          {auth.isAdmin ? (
-            <FAB
-              iconName='add'
-              onPress={() => navigation.navigate(AddInstitution)}
-            />
-          ) : null}
+          <FAB
+            iconName='add'
+            onPress={() => navigation.navigate(AddInstitution)}
+          />
         </>
       )}
     </SafeAreaView>
