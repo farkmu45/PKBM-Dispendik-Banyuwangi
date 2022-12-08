@@ -1,17 +1,87 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import * as ImagePicker from 'expo-image-picker'
 import React, { useState } from 'react'
-import { Alert, Image, ScrollView, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import colors from 'tailwindcss/colors'
 import Button from '../../components/Button'
 import Header from '../../components/Header'
 import Input from '../../components/Input'
+import LoadingModal from '../../components/LoadingModal'
+import themeColors from '../../constants/colors'
+import { Activity, Main } from '../../constants/screens'
+import api from '../../network/api'
 
 export default function AddActivityScreen({ navigation }) {
   const [image, setImage] = useState(null)
   const [date, setDate] = useState(new Date())
+  const [name, setName] = useState()
+  const [description, setDescription] = useState()
+
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['insitutionFetch'],
+    queryFn: async () => {
+      const result = await api.get('/profile')
+      return result
+    },
+  })
+
+  const mutation = useMutation({
+    mutationFn: async (params) => {
+      const result = await api.post('/activities', params, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      return result
+    },
+    onSuccess: async (result) => {
+      if (result.ok) {
+        ToastAndroid.show(
+          'Data aktivitas berhasil ditambahkan',
+          ToastAndroid.SHORT
+        )
+
+        navigation.replace(Main, { screen: Activity })
+      } else {
+        console.log(result.data)
+        Alert.alert(
+          'Kesalahan',
+          'Terjadi kesalahan saat menambahkan data, silahkan ulangi kembali',
+          [{ text: 'OK' }]
+        )
+      }
+    },
+  })
+
+  const onSubmit = () => {
+    const formData = new FormData()
+
+    formData.append('name', name)
+    formData.append('description', description)
+    formData.append('date', format(date, 'yyyy-MM-dd'))
+    formData.append('picture', {
+      name: 'test',
+      uri: image,
+      type: 'image/jpg',
+    })
+
+    console.log(formData.getAll('picture'))
+
+    mutation.mutate(formData)
+  }
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
     setDate(currentDate)
@@ -34,7 +104,6 @@ export default function AddActivityScreen({ navigation }) {
         aspect: [16, 9],
         quality: 1,
       })
-      console.log(result)
       if (!result.canceled) {
         setImage(result.uri)
       }
@@ -46,13 +115,38 @@ export default function AddActivityScreen({ navigation }) {
     }
   }
 
+  if (isLoading)
+    return (
+      <SafeAreaView className='flex-1'>
+        <Header />
+        <View className='flex-1 justify-center'>
+          <ActivityIndicator size={50} color={themeColors.primary[700]} />
+        </View>
+      </SafeAreaView>
+    )
+
+  if (error || !data.ok || mutation.error)
+    return Alert.alert(
+      'Kesalahan',
+      'Terjadi kesalahan, silahkan ulangi kembali',
+      [
+        {
+          text: 'Ya',
+          style: 'default',
+        },
+      ]
+    )
+
   return (
     <SafeAreaView className='flex-1'>
       <Header showBackButton={true} />
+      {mutation.isLoading ? <LoadingModal /> : null}
       <ScrollView>
         <View className='p-4'>
           <Text className='text-base font-SemiBold'>Nama lembaga :</Text>
-          <Text className='text-base font-Regular'>Lembaga 1</Text>
+          <Text className='text-base font-Regular'>
+            {data.data.data.institution}
+          </Text>
 
           <View className='gap-y-3 mt-8'>
             <View>
@@ -92,17 +186,18 @@ export default function AddActivityScreen({ navigation }) {
               label='Tanggal'
               caretHidden={true}
               onTouchEnd={showDatePicker}
-              value={date.toLocaleDateString()}
+              value={format(date, 'dd/MM/yyyy')}
             />
-            <Input label='Nama Kegiatan' />
+            <Input label='Nama Kegiatan' onChangeText={setName} />
             <Input
+              onChangeText={setDescription}
               className='mb-5'
               label='Keterangan'
               textAlignVertical='top'
               multiline={true}
               numberOfLines={6}
             />
-            <Button onPress={() => navigation.navigate('Main')}>Kirim</Button>
+            <Button onPress={onSubmit}>Kirim</Button>
           </View>
         </View>
       </ScrollView>

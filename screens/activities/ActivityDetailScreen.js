@@ -7,7 +7,7 @@ import {
   Image,
   ScrollView,
   Text,
-  View,
+  View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../../components/Header'
@@ -28,12 +28,11 @@ export default function ActivityDetailScreen({ route }) {
 
   if (isLoading)
     return (
-      <SafeAreaView>
-        <ActivityIndicator
-          className='mt-20'
-          size={'large'}
-          color={colors.primary[700]}
-        />
+      <SafeAreaView className='flex-1'>
+        <Header showBackButton={true} />
+        <View className='flex-1 justify-center'>
+          <ActivityIndicator size={50} color={colors.primary[700]} />
+        </View>
       </SafeAreaView>
     )
 
@@ -53,8 +52,6 @@ export default function ActivityDetailScreen({ route }) {
   return (
     <SafeAreaView className='flex-1'>
       <Header showBackButton={true} />
-      {console.log(data.data.data.picture)}
-
       <ScrollView contentContainerStyle={{ paddingBottom: tabBarHeight }}>
         <View className='px-4'>
           <Text className='text-base font-SemiBold'>Nama Lembaga :</Text>
