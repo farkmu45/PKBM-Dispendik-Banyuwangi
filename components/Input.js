@@ -2,7 +2,13 @@ import React from 'react'
 import { Text, TextInput, View } from 'react-native'
 import colors from '../constants/colors'
 
-export default function Input({ style, label, placeholder, ...props }) {
+export default function Input({ style, label, placeholder, error, ...props }) {
+  let defaultStyle = 'border-gray-400 focus:border-primary-700'
+
+  if (error) {
+    defaultStyle = 'border-red-600 text-red-600'
+  }
+
   return (
     <View style={style}>
       {(placeholder && label) || label ? (
@@ -15,8 +21,12 @@ export default function Input({ style, label, placeholder, ...props }) {
         cursorColor={colors.primary[700]}
         className={`border-b-2 font-Regular text-base ${
           placeholder ? 'py-2' : 'pb-1'
-        } border-gray-400 focus:border-primary-700`}
+        } ${defaultStyle}`}
       />
+
+      {error && (
+        <Text className='font-Regular text-red-600 text-sm mt-1'>{error}</Text>
+      )}
     </View>
   )
 }

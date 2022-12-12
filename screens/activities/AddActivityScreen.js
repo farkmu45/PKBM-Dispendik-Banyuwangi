@@ -52,10 +52,8 @@ export default function AddActivityScreen({ navigation }) {
           'Data aktivitas berhasil ditambahkan',
           ToastAndroid.SHORT
         )
-
         navigation.replace(Main, { screen: Activity })
       } else {
-        console.log(result.data)
         Alert.alert(
           'Kesalahan',
           'Terjadi kesalahan saat menambahkan data, silahkan ulangi kembali',
@@ -76,8 +74,6 @@ export default function AddActivityScreen({ navigation }) {
       uri: image,
       type: 'image/jpg',
     })
-
-    console.log(formData.getAll('picture'))
 
     mutation.mutate(formData)
   }
