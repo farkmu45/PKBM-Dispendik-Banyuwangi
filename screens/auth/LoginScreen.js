@@ -2,18 +2,18 @@ import { useMutation } from '@tanstack/react-query'
 import * as NavigationBar from 'expo-navigation-bar'
 import * as SecureStore from 'expo-secure-store'
 import { StatusBar } from 'expo-status-bar'
-import React, { useContext, useState } from 'react'
+import { Formik } from 'formik'
+import React, { useContext } from 'react'
 import {
-  ActivityIndicator,
   Alert,
   Image,
-  Modal,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import * as Yup from 'yup'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import LoadingModal from '../../components/LoadingModal'
@@ -30,8 +30,6 @@ import api from '../../network/api'
 
 export default function LoginScreen({ route, navigation }) {
   const { isAdmin } = route.params
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const auth = useContext(AuthContext)
 
   const mutation = useMutation({
@@ -60,6 +58,15 @@ export default function LoginScreen({ route, navigation }) {
     },
   })
 
+  const onSubmit = (values) => {
+    mutation.mutate(values)
+  }
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Email tidak valid').required('Wajib diisi'),
+    password: Yup.string().required('Wajib diisi'),
+  })
+
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
 
   return (
@@ -83,29 +90,62 @@ export default function LoginScreen({ route, navigation }) {
             source={require('../../assets/images/logo.png')}
           />
           <Text className='text-2xl mt-10 font-Medium'>Masuk dengan akun</Text>
-          <View className='overflow-hidden rounded-md p-5 bg-white w-full mt-6'>
-            <Input placeholder='E-mail atau username' onChangeText={setEmail} />
-            <Input
-              placeholder='Kata sandi'
-              onChangeText={setPassword}
-              className='mt-2'
-            />
-
-            <TouchableOpacity
-              className='self-end mt-6'
-              onPress={() => navigation.navigate(ForgotPassword)}
-            >
-              <Text className='text-sm font-Medium text-primary-600'>
-                Lupa Sandi?
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Button
-            className='self-stretch mt-5'
-            onPress={() => mutation.mutate({ email, password })}
+          <Formik
+            initialValues={{
+              email: '',
+              password: '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
           >
-            Masuk
-          </Button>
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <>
+                <View className='overflow-hidden rounded-md p-5 bg-white w-full mt-6'>
+                  <Input
+                    placeholder='E-mail atau username'
+                    autoCompleteType='email'
+                    keyboardType='email-address'
+                    onChangeText={handleChange('email')}
+                    error={touched.email && errors.email ? errors.email : null}
+                    onBlur={handleBlur('email')}
+                    value={values.email}
+                  />
+                  <Input
+                    className='mt-2'
+                    placeholder='Kata sandi'
+                    secureTextEntry={true}
+                    error={
+                      touched.password && errors.password
+                        ? errors.password
+                        : null
+                    }
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    value={values.password}
+                  />
+
+                  <TouchableOpacity
+                    className='self-end mt-6'
+                    onPress={() => navigation.navigate(ForgotPassword)}
+                  >
+                    <Text className='text-sm font-Medium text-primary-600'>
+                      Lupa Sandi?
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <Button className='self-stretch mt-5' onPress={handleSubmit}>
+                  Masuk
+                </Button>
+              </>
+            )}
+          </Formik>
 
           {!isAdmin ? (
             <Button
