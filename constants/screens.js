@@ -2,7 +2,7 @@ export const NotificationList = 'NotificationList'
 
 export const Institution = 'Institution'
 export const InstitutitionList = 'InstitutionList'
-export const AddInstitution = 'AddInstitution'
+export const ManageInstitution = 'ManageInstitution'
 
 export const Activity = 'Activity'
 export const ActivityList = 'ActivityList'

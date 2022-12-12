@@ -1,4 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import React, { useContext } from 'react'
 import {
@@ -13,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import colors from '../../constants/colors'
-import { AddInstitution } from '../../constants/screens'
+import { AddInstitution, ManageInstitution } from '../../constants/screens'
 import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
@@ -68,19 +69,25 @@ export default function InstitutionListScreen({ navigation }) {
             refreshing={isLoading}
             onRefresh={() => refetch()}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <Item item={item} auth={auth} />}
+            renderItem={({ item }) => (
+              <Item item={item} isAdmin={auth.isAdmin} />
+            )}
           />
+          {/* 
+          // {auth.isAdmin ? ( */}
           <FAB
             iconName='add'
-            onPress={() => navigation.navigate(AddInstitution)}
+            onPress={() => navigation.navigate(ManageInstitution)}
           />
+          {/* ) : null} */}
         </>
       )}
     </SafeAreaView>
   )
 }
 
-function Item({ item }, auth) {
+function Item({ item }, isAdmin) {
+  const navigation = useNavigation()
   return (
     <View className='mx-4 my-3 rounded-lg'>
       <Pressable
@@ -93,14 +100,16 @@ function Item({ item }, auth) {
             <Text className='text-base font-Medium w-full'>{item.name}</Text>
           </View>
           <View className='flex-row self-center gap-x-2 ml-2'>
-            {auth.isAdmin ? (
+            {isAdmin ? (
               <>
                 <View className='bg-yellow-600 rounded-lg'>
                   <Pressable
                     className='p-2'
                     android_ripple={{ borderless: true }}
                     onPress={() => {
-                      navigation.navigate(AddInstitution)
+                      navigation.navigate(ManageInstitution, {
+                        institution: item,
+                      })
                     }}
                   >
                     <MaterialIcons name='edit' size={20} color='white' />

@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
-import { AddInstitution, InstitutitionList } from '../../constants/screens'
-import AddInstitutionScreen from './AddInstitutionScreen'
+import { InstitutitionList, ManageInstitution } from '../../constants/screens'
 import InstitutionListScreen from './InstitutionListScreen'
+import ManageInstitutionScreen from './ManageInstitutionScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -13,7 +13,11 @@ export default function InstitutionScreen() {
         name={InstitutitionList}
         component={InstitutionListScreen}
       />
-      <Stack.Screen name={AddInstitution} component={AddInstitutionScreen} />
+      <Stack.Screen
+        name={ManageInstitution}
+        initialParams={{ institution: '' }}
+        component={ManageInstitutionScreen}
+      />
     </Stack.Navigator>
   )
 }
