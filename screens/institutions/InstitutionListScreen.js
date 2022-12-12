@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useContext } from 'react'
 import {
   ActivityIndicator,
@@ -8,13 +8,15 @@ import {
   FlatList,
   Pressable,
   Text,
+  ToastAndroid,
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FAB from '../../components/FAB'
 import Header from '../../components/Header'
+import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
-import { AddInstitution, ManageInstitution } from '../../constants/screens'
+import { ManageInstitution } from '../../constants/screens'
 import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
@@ -29,6 +31,37 @@ export default function InstitutionListScreen({ navigation }) {
     },
   })
 
+  const mutation = useMutation({
+    mutationFn: async (params) => {
+      const result = await api.delete(`/institutions/${params.id}`)
+      return result
+    },
+    onSuccess: async (result) => {
+      if (result.ok) {
+        ToastAndroid.show('Data institusi berhasil dihapus', ToastAndroid.SHORT)
+      } else {
+        return <ErrorModal />
+      }
+    },
+  })
+
+  const deleteItem = (id) =>
+    Alert.alert(
+      'Peringatan',
+      'Apakah anda yakin ingin menghapus institusi ini?',
+      [
+        {
+          text: 'Ya',
+          onPress: () => mutation.mutate({ id }),
+          style: 'default',
+        },
+        {
+          text: 'Tidak',
+          style: 'cancel',
+        },
+      ]
+    )
+
   if (isLoading) {
     return (
       <SafeAreaView className='flex-1'>
@@ -42,10 +75,12 @@ export default function InstitutionListScreen({ navigation }) {
 
   return (
     <SafeAreaView className='flex-1'>
-      {error || !data.ok ? (
+      {mutation.isLoading && <LoadingModal />}
+
+      {error || !data.ok || mutation.isError ? (
         Alert.alert(
           'Kesalahan',
-          'Terjadi kesalahan saat mengambil data, silahkan ulangi kembali',
+          'Terjadi kesalahan saat, silahkan ulangi kembali',
           [
             {
               text: 'Ya',
@@ -70,7 +105,11 @@ export default function InstitutionListScreen({ navigation }) {
             onRefresh={() => refetch()}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <Item item={item} isAdmin={auth.isAdmin} />
+              <Item
+                item={item}
+                isAdmin={auth.isAdmin}
+                deleteFunc={() => deleteItem(item.id)}
+              />
             )}
           />
           {/* 
@@ -86,56 +125,48 @@ export default function InstitutionListScreen({ navigation }) {
   )
 }
 
-function Item({ item }, isAdmin) {
+function Item({ item, isAdmin, deleteFunc }) {
   const navigation = useNavigation()
   return (
-    <View className='mx-4 my-3 rounded-lg'>
-      <Pressable
-        className='px-3 py-5 bg-primary-100'
-        android_ripple={{ borderless: true }}
-        onPress={() => {}}
-      >
-        <View className='flex-row justify-between'>
-          <View className='flex-shrink justify-center items-start'>
-            <Text className='text-base font-Medium w-full'>{item.name}</Text>
-          </View>
-          <View className='flex-row self-center gap-x-2 ml-2'>
-            {isAdmin ? (
-              <>
-                <View className='bg-yellow-600 rounded-lg'>
-                  <Pressable
-                    className='p-2'
-                    android_ripple={{ borderless: true }}
-                    onPress={() => {
-                      navigation.navigate(ManageInstitution, {
-                        institution: item,
-                      })
-                    }}
-                  >
-                    <MaterialIcons name='edit' size={20} color='white' />
-                  </Pressable>
-                </View>
-
-                <View className='rounded-lg bg-red-600'>
-                  <Pressable
-                    className='p-2'
-                    android_ripple={{ borderless: true }}
-                    onPress={() => {
-                      // navigation.navigate(AddInstitution)
-                    }}
-                  >
-                    <MaterialIcons
-                      name='delete-outline'
-                      size={20}
-                      color='white'
-                    />
-                  </Pressable>
-                </View>
-              </>
-            ) : null}
-          </View>
+    <View className='mx-4 my-3 rounded-lg px-3 py-5 bg-primary-100'>
+      <View className='flex-row justify-between'>
+        <View className='flex-shrink justify-center items-start'>
+          <Text className='text-base font-Medium w-full'>{item.name}</Text>
         </View>
-      </Pressable>
+        <View className='flex-row self-center gap-x-2 ml-2'>
+          {isAdmin ? (
+            <>
+              <View className='bg-yellow-600 rounded-lg'>
+                <Pressable
+                  className='p-2'
+                  android_ripple={{ borderless: true }}
+                  onPress={() => {
+                    navigation.navigate(ManageInstitution, {
+                      institution: item,
+                    })
+                  }}
+                >
+                  <MaterialIcons name='edit' size={20} color='white' />
+                </Pressable>
+              </View>
+
+              <View className='rounded-lg bg-red-600'>
+                <Pressable
+                  className='p-2'
+                  android_ripple={{ borderless: true }}
+                  onPress={deleteFunc}
+                >
+                  <MaterialIcons
+                    name='delete-outline'
+                    size={20}
+                    color='white'
+                  />
+                </Pressable>
+              </View>
+            </>
+          ) : null}
+        </View>
+      </View>
     </View>
   )
 }
