@@ -47,13 +47,15 @@ export default function App() {
       if (token) {
         api.setHeader('Authorization', `Bearer ${token}`)
         const role = await SecureStore.getItemAsync('role')
-        if (role == 1) {
-          setAuth({ isAdmin: true })
+        console.log(role)
+        if (role == 2) {
+          setAuth({ signedIn: true, isAdmin: true })
         } else {
-          setAuth({ isAdmin: false })
+          setAuth({ signedIn: true, isAdmin: false })
         }
-        setAuth({ signedIn: true })
       }
+
+      console.log(auth)
     }
     bootstrapAsync()
   }, [])
