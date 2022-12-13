@@ -3,6 +3,7 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import * as ImagePicker from 'expo-image-picker'
+import { Formik } from 'formik'
 import React, { useState } from 'react'
 import {
   ActivityIndicator,
@@ -22,13 +23,9 @@ import LoadingModal from '../../components/LoadingModal'
 import themeColors from '../../constants/colors'
 import { Activity, Main } from '../../constants/screens'
 import api from '../../network/api'
+import * as Yup from 'yup'
 
 export default function AddActivityScreen({ navigation }) {
-  const [image, setImage] = useState(null)
-  const [date, setDate] = useState(new Date())
-  const [name, setName] = useState()
-  const [description, setDescription] = useState()
-
   const { isLoading, error, data } = useQuery({
     queryKey: ['insitutionFetch'],
     queryFn: async () => {
@@ -63,36 +60,31 @@ export default function AddActivityScreen({ navigation }) {
     },
   })
 
-  const onSubmit = () => {
+  const onSubmit = (values) => {
     const formData = new FormData()
 
-    formData.append('name', name)
-    formData.append('description', description)
-    formData.append('date', format(date, 'yyyy-MM-dd'))
+    formData.append('name', values.name)
+    formData.append('description', values.description)
+    formData.append('date', format(values.date, 'yyyy-MM-dd'))
     formData.append('picture', {
       name: 'test',
-      uri: image,
+      uri: values.image,
       type: 'image/jpg',
     })
 
     mutation.mutate(formData)
   }
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate
-    setDate(currentDate)
-  }
-
-  const showDatePicker = () => {
+  const showDatePicker = (defaultVal, setFieldValue) => {
     DateTimePickerAndroid.open({
       maximumDate: new Date(),
-      value: date,
-      onChange,
+      value: defaultVal,
+      onChange: (event, selectedDate) => setFieldValue('date', selectedDate),
       mode: 'date',
     })
   }
 
-  const pickImage = async () => {
+  const pickImage = async (setFieldValue) => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -101,7 +93,7 @@ export default function AddActivityScreen({ navigation }) {
         quality: 1,
       })
       if (!result.canceled) {
-        setImage(result.uri)
+        setFieldValue('image', result.assets[0].uri)
       }
     } catch (error) {
       Alert.alert(
@@ -110,6 +102,13 @@ export default function AddActivityScreen({ navigation }) {
       )
     }
   }
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Wajib diisi'),
+    description: Yup.string().required('Wajib diisi'),
+    date: Yup.date().required('Wajib diisi'),
+    image: Yup.string().required('Wajib diisi'),
+  })
 
   if (isLoading)
     return (
@@ -144,57 +143,99 @@ export default function AddActivityScreen({ navigation }) {
             {data.data.data.institution}
           </Text>
 
-          <View className='gap-y-3 mt-8'>
-            <View>
-              <Text className='text-base mb-2 font-Regular'>
-                Gambar Kegiatan
-              </Text>
-              {image ? (
-                <>
-                  <Image source={{ uri: image }} className='h-64' />
-                  <Button
-                    outline={true}
-                    className='self-end mt-3'
-                    onPress={pickImage}
-                  >
-                    Ubah
-                  </Button>
-                </>
-              ) : (
-                <View
-                  onTouchEnd={pickImage}
-                  className='h-64 bg-gray-200 justify-center'
-                >
-                  <View className='items-center gap-y-1'>
-                    <MaterialIcons
-                      name='file-upload'
-                      size={33}
-                      color={colors.gray[500]}
-                    />
-                    <Text className='text-sm font-Regular text-gray-500'>
-                      Upload gambar kegiatan
+          <Formik
+            initialValues={{
+              name: '',
+              description: '',
+              date: new Date(),
+              image: '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              setFieldValue,
+            }) => (
+              <View className='gap-y-3 mt-4'>
+                <View>
+                  <Text className='text-sm mb-2 font-Regular text-gray-400'>
+                    Gambar Kegiatan
+                  </Text>
+                  {values.image ? (
+                    <>
+                      <Image source={{ uri: values.image }} className='h-64' />
+                      <Button
+                        outline={true}
+                        className='self-end mt-3'
+                        onPress={() => pickImage(setFieldValue)}
+                      >
+                        Ubah
+                      </Button>
+                    </>
+                  ) : (
+                    <View
+                      onTouchEnd={() => pickImage(setFieldValue)}
+                      className='h-64 bg-gray-200 justify-center'
+                    >
+                      <View className='items-center gap-y-1'>
+                        <MaterialIcons
+                          name='file-upload'
+                          size={33}
+                          color={colors.gray[500]}
+                        />
+                        <Text className='text-sm font-Regular text-gray-500'>
+                          Upload gambar kegiatan
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+
+                  {touched.image && errors.image ? (
+                    <Text className='font-Regular text-red-600 text-sm mt-1'>
+                      {errors.image}
                     </Text>
-                  </View>
+                  ) : null}
                 </View>
-              )}
-            </View>
-            <Input
-              label='Tanggal'
-              caretHidden={true}
-              onTouchEnd={showDatePicker}
-              value={format(date, 'dd/MM/yyyy')}
-            />
-            <Input label='Nama Kegiatan' onChangeText={setName} />
-            <Input
-              onChangeText={setDescription}
-              className='mb-5'
-              label='Keterangan'
-              textAlignVertical='top'
-              multiline={true}
-              numberOfLines={6}
-            />
-            <Button onPress={onSubmit}>Kirim</Button>
-          </View>
+                <Input
+                  label='Tanggal'
+                  caretHidden={true}
+                  onTouchEnd={() => showDatePicker(values.date, setFieldValue)}
+                  error={touched.date && errors.date ? errors.date : null}
+                  onBlur={handleBlur('date')}
+                  value={format(values.date, 'dd/MM/yyyy')}
+                />
+                <Input
+                  label='Nama Kegiatan'
+                  onChangeText={handleChange('name')}
+                  error={touched.name && errors.name ? errors.name : null}
+                  onBlur={handleBlur('name')}
+                  value={values.name}
+                />
+                <Input
+                  onChangeText={handleChange('description')}
+                  error={
+                    touched.description && errors.description
+                      ? errors.description
+                      : null
+                  }
+                  onBlur={handleBlur('description')}
+                  value={values.description}
+                  className='mb-5'
+                  label='Keterangan'
+                  textAlignVertical='top'
+                  multiline={true}
+                  numberOfLines={6}
+                />
+                <Button onPress={handleSubmit}>Kirim</Button>
+              </View>
+            )}
+          </Formik>
         </View>
       </ScrollView>
     </SafeAreaView>
