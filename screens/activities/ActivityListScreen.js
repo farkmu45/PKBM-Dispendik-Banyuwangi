@@ -1,10 +1,11 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import React, { useContext, useState } from 'react'
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Pressable,
   Text,
@@ -22,13 +23,35 @@ export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState(new Date())
   const { auth } = useContext(AuthContext)
 
-  const { isLoading, error, data, refetch } = useQuery({
+  const fetchActivities = async ({ pageParam = 0 }) => {
+    const result = await api.get(`/activities?page=${pageParam}`)
+    return result.data
+  }
+
+  const {
+    isLoading,
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    error,
+    refetch,
+  } = useInfiniteQuery({
     queryKey: ['activityData'],
-    queryFn: async () => {
-      const result = await api.get('/activities')
-      return result
+    queryFn: fetchActivities,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.links.next != null) {
+        return lastPage.meta.current_page + 1
+      }
+      return undefined
     },
   })
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage()
+    }
+  }
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
@@ -55,7 +78,7 @@ export default function ActivityListScreen({ navigation }) {
 
   return (
     <SafeAreaView className='flex-1'>
-      {error || !data.ok ? (
+      {error ? (
         Alert.alert(
           'Kesalahan',
           'Terjadi kesalahan saat mengambil data, silahkan ulangi kembali',
@@ -71,7 +94,7 @@ export default function ActivityListScreen({ navigation }) {
         <>
           <Header />
           <FlatList
-            data={data.data.data}
+            data={data.pages.map((page) => page.data).flat()}
             contentContainerStyle={{ paddingBottom: 90 }}
             ListHeaderComponent={() => (
               <View className='px-5 mt-6 mb-7'>
@@ -90,7 +113,13 @@ export default function ActivityListScreen({ navigation }) {
             progressViewOffset={50}
             refreshing={isLoading}
             onRefresh={refetch}
-            keyExtractor={(item) => item.id}
+            onEndReached={loadMore}
+            keyExtractor={(item, index) => index}
+            ListFooterComponent={
+              isFetchingNextPage ? (
+                <ActivityIndicator className='mt-5' size='large' color={colors.primary[500]} />
+              ) : null
+            }
             renderItem={({ item }) => (
               <View className='bg-primary-100 mx-4 my-3 rounded-lg'>
                 <Pressable

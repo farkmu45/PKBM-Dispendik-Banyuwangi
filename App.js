@@ -55,7 +55,6 @@ export default function App() {
         }
       }
 
-      console.log(auth)
     }
     bootstrapAsync()
   }, [])
