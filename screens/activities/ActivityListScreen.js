@@ -1,6 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useNavigation } from '@react-navigation/native'
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import React, { useContext, useState } from 'react'
 import {
@@ -9,11 +10,14 @@ import {
   FlatList,
   Pressable,
   Text,
+  ToastAndroid,
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import ErrorModal from '../../components/ErrorModal'
 import FAB from '../../components/FAB'
 import Header from '../../components/Header'
+import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
 import { ActivityDetail, AddActivity } from '../../constants/screens'
 import { AuthContext } from '../../contexts'
@@ -53,6 +57,22 @@ export default function ActivityListScreen({ navigation }) {
     }
   }
 
+  // Delete mutation
+  const mutation = useMutation({
+    mutationFn: async (params) => {
+      const result = await api.delete(`/activities/${params.id}`)
+      return result
+    },
+    onSuccess: async (result) => {
+      console.log(result)
+      if (result.ok) {
+        ToastAndroid.show('Data kegiatan berhasil dihapus', ToastAndroid.SHORT)
+      } else {
+        return <ErrorModal />
+      }
+    },
+  })
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
     setDate(currentDate)
@@ -66,6 +86,21 @@ export default function ActivityListScreen({ navigation }) {
     })
   }
 
+  const deleteItem = (id) =>
+    Alert.alert('Peringatan', 'Apakah anda yakin ingin menghapus data ini?', [
+      {
+        text: 'Ya',
+        onPress: () => {
+          mutation.mutate({ id })
+        },
+        style: 'default',
+      },
+      {
+        text: 'Tidak',
+        style: 'cancel',
+      },
+    ])
+
   if (isLoading)
     return (
       <SafeAreaView className='flex-1'>
@@ -78,6 +113,8 @@ export default function ActivityListScreen({ navigation }) {
 
   return (
     <SafeAreaView className='flex-1'>
+      {mutation.error ? <ErrorModal /> : null}
+      {mutation.isLoading ? <LoadingModal /> : null}
       {error ? (
         Alert.alert(
           'Kesalahan',
@@ -117,37 +154,15 @@ export default function ActivityListScreen({ navigation }) {
             keyExtractor={(item, index) => index}
             ListFooterComponent={
               isFetchingNextPage ? (
-                <ActivityIndicator className='mt-5' size='large' color={colors.primary[500]} />
+                <ActivityIndicator
+                  className='mt-5'
+                  size='large'
+                  color={colors.primary[500]}
+                />
               ) : null
             }
             renderItem={({ item }) => (
-              <View className='bg-primary-100 mx-4 my-3 rounded-lg'>
-                <Pressable
-                  className='px-4 py-5'
-                  android_ripple={{ borderless: true }}
-                  onPress={() => {
-                    navigation.navigate(ActivityDetail, {
-                      activityId: item.id,
-                    })
-                  }}
-                >
-                  <View className='flex-row items-center'>
-                    <View className='shrink mr-3'>
-                      <Text className='text-base text-primary-600 font-SemiBold'>
-                        {item.name}
-                      </Text>
-                    </View>
-
-                    <View className='block ml-auto'>
-                      <MaterialIcons
-                        name='keyboard-arrow-right'
-                        size={24}
-                        color={colors.primary[600]}
-                      />
-                    </View>
-                  </View>
-                </Pressable>
-              </View>
+              <Item activity={item} deleteFunc={() => deleteItem(item.id)} />
             )}
           />
           {!auth.isAdmin ? (
@@ -159,5 +174,58 @@ export default function ActivityListScreen({ navigation }) {
         </>
       )}
     </SafeAreaView>
+  )
+}
+
+function Item({ activity, deleteFunc }) {
+  const navigation = useNavigation()
+  return (
+    <View className='bg-primary-100 mx-4 my-3 rounded-lg'>
+      <Pressable
+        className='px-4 py-5'
+        android_ripple={{ borderless: true }}
+        onPress={() => {
+          navigation.navigate(ActivityDetail, {
+            activityId: activity.id,
+          })
+        }}
+      >
+        <View className='flex-row items-center justify-between'>
+          <View className='shrink mr-3'>
+            <Text className='text-base text-primary-600 font-SemiBold'>
+              {activity.name}
+            </Text>
+          </View>
+
+          <View className='block ml-auto flex-row items-center gap-x-2'>
+            <View className='bg-yellow-600 rounded-lg'>
+              <Pressable
+                className='p-2'
+                android_ripple={{ borderless: true }}
+                onPress={() => {}}
+              >
+                <MaterialIcons name='edit' size={20} color='white' />
+              </Pressable>
+            </View>
+
+            <View className='rounded-lg bg-red-600'>
+              <Pressable
+                className='p-2'
+                android_ripple={{ borderless: true }}
+                onPress={deleteFunc}
+              >
+                <MaterialIcons name='delete-outline' size={20} color='white' />
+              </Pressable>
+            </View>
+
+            <MaterialIcons
+              name='keyboard-arrow-right'
+              size={24}
+              color={colors.primary[600]}
+            />
+          </View>
+        </View>
+      </Pressable>
+    </View>
   )
 }
