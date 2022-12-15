@@ -109,7 +109,7 @@ export default function LoginScreen({ route, navigation }) {
               <>
                 <View className='overflow-hidden rounded-md p-5 bg-white w-full mt-6'>
                   <Input
-                    placeholder='E-mail atau username'
+                    placeholder='E-mail'
                     autoCompleteType='email'
                     keyboardType='email-address'
                     onChangeText={handleChange('email')}

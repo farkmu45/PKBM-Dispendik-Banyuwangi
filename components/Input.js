@@ -17,6 +17,7 @@ export default function Input({ style, label, placeholder, error, ...props }) {
 
       <TextInput
         {...props}
+        selectionColor={colors.primary[300]}
         placeholder={placeholder}
         cursorColor={colors.primary[700]}
         className={`border-b-2 font-Regular text-base ${
