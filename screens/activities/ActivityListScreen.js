@@ -134,7 +134,7 @@ export default function ActivityListScreen({ navigation }) {
             data={data.pages.map((page) => page.data).flat()}
             contentContainerStyle={{ paddingBottom: 90 }}
             ListHeaderComponent={() => (
-              <View className='px-5 mt-6 mb-7'>
+              <View className='px-4 mt-6 mb-7'>
                 <Text className='text-3xl font-Bold'>Agenda Kegiatan</Text>
 
                 <View
