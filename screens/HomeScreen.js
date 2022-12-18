@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View, Linking } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '../components/Button'
 import Header from '../components/Header'
@@ -12,7 +12,14 @@ export default function HomeScreen() {
       <ScrollView>
         <View className='items-center pb-10 pt-5 px-4'>
           <Text className='text-lg text-center font-Bold'>SELAMAT DATANG</Text>
-          <Button className='mt-2'>Lebih Lanjut</Button>
+          <Button
+            className='mt-2'
+            onPress={async () =>
+              await Linking.openURL('https://pendidikan.banyuwangikab.go.id')
+            }
+          >
+            Lebih Lanjut
+          </Button>
           <Text className='font-SemiBold text-base text-center mb-2 mt-6'>
             PKBM Dinas Pendidikan Kabupaten Banyuwangi
           </Text>
