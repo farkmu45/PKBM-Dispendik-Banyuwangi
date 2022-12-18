@@ -15,9 +15,8 @@ export default function Header({ showBackButton, style }) {
   const { setAuth } = useContext(AuthContext)
 
   const mutation = useMutation({
-    mutationFn: async () => {
-      const result = await api.post('/logout')
-      return result
+    mutationFn: () => {
+      return api.post('/logout')
     },
     onSuccess: async (result) => {
       if (result.ok) {

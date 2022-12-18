@@ -13,8 +13,8 @@ export default function Button({
       style={style}
       className={
         outline
-          ? 'bg-transparent rounded-full border-2 border-primary-700'
-          : 'bg-primary-700 rounded-full'
+          ? 'bg-transparent rounded-full border-2 border-primary-700 box-border'
+          : 'bg-primary-700 rounded-full box-border'
       }
     >
       <Pressable

@@ -14,21 +14,32 @@ import {
   View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import Button from '../../components/Button'
 import ErrorModal from '../../components/ErrorModal'
 import FAB from '../../components/FAB'
 import Header from '../../components/Header'
 import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
-import { ActivityDetail, AddActivity } from '../../constants/screens'
+import {
+  ActivityDetail,
+  AddActivity,
+  EditActivity,
+} from '../../constants/screens'
 import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
 export default function ActivityListScreen({ navigation }) {
-  const [date, setDate] = useState(new Date())
+  const [date, setDate] = useState('')
   const { auth } = useContext(AuthContext)
 
   const fetchActivities = async ({ pageParam = 0 }) => {
-    const result = await api.get(`/activities?page=${pageParam}`)
+    let result = await api.get(`/activities?page=${pageParam}`)
+
+    if (date)
+      result = await api.get(
+        `/activities?page=${pageParam}&date=${format(date, 'yyyy-MM-dd')}`
+      )
+
     return result.data
   }
 
@@ -60,27 +71,28 @@ export default function ActivityListScreen({ navigation }) {
   // Delete mutation
   const mutation = useMutation({
     mutationFn: async (params) => {
-      const result = await api.delete(`/activities/${params.id}`)
-      return result
+      return api.delete(`/activities/${params.id}`)
     },
-    onSuccess: async (result) => {
-      console.log(result)
+    onSuccess: (result) => {
       if (result.ok) {
         ToastAndroid.show('Data kegiatan berhasil dihapus', ToastAndroid.SHORT)
       } else {
-        return <ErrorModal />
+        return <ErrorModal text='Terjadi kesalahan saat menghapus data' />
       }
     },
+
+    onError: () => <ErrorModal text='Terjadi kesalahan saat menghapus data' />,
   })
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
     setDate(currentDate)
+    refetch()
   }
 
   const showDatePicker = () => {
     DateTimePickerAndroid.open({
-      value: date,
+      value: date ? date : new Date(),
       onChange,
       mode: 'date',
     })
@@ -113,7 +125,6 @@ export default function ActivityListScreen({ navigation }) {
 
   return (
     <SafeAreaView className='flex-1'>
-      {mutation.error ? <ErrorModal /> : null}
       {mutation.isLoading ? <LoadingModal /> : null}
       {error ? (
         Alert.alert(
@@ -141,10 +152,20 @@ export default function ActivityListScreen({ navigation }) {
                   onTouchStart={showDatePicker}
                   className='border-[1px] border-gray-400 mt-6 px-3 py-2 rounded-full'
                 >
-                  <Text className='text-base font-Regular'>
-                    {format(date, 'dd/MM/yyyy')}
+                  <Text className='text-base font-Regular text-gray-500'>
+                    {date
+                      ? format(date, 'dd/MM/yyyy')
+                      : 'Filter berdasarkan tanggal'}
                   </Text>
                 </View>
+
+                <Button
+                  className='mt-3 self-end'
+                  outline={true}
+                  onPress={() => setDate('')}
+                >
+                  Hapus filter
+                </Button>
               </View>
             )}
             progressViewOffset={50}
@@ -202,7 +223,11 @@ function Item({ activity, deleteFunc }) {
               <Pressable
                 className='p-2'
                 android_ripple={{ borderless: true }}
-                onPress={() => {}}
+                onPress={() => {
+                  navigation.navigate(EditActivity, {
+                    activityId: activity.id,
+                  })
+                }}
               >
                 <MaterialIcons name='edit' size={20} color='white' />
               </Pressable>

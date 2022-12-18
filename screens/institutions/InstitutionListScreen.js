@@ -112,13 +112,13 @@ export default function InstitutionListScreen({ navigation }) {
               />
             )}
           />
-          {/* 
-          // {auth.isAdmin ? ( */}
-          <FAB
-            iconName='add'
-            onPress={() => navigation.navigate(ManageInstitution)}
-          />
-          {/* ) : null} */}
+
+          {auth.isAdmin ? (
+            <FAB
+              iconName='add'
+              onPress={() => navigation.navigate(ManageInstitution)}
+            />
+          ) : null}
         </>
       )}
     </SafeAreaView>

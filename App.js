@@ -53,7 +53,6 @@ export default function App() {
           setAuth({ signedIn: true, isAdmin: false })
         }
       }
-
     }
     bootstrapAsync()
   }, [])
@@ -89,13 +88,7 @@ export default function App() {
               }}
             >
               {auth.signedIn ? (
-                <>
-                  <Stack.Screen name={Main} component={MainScreen} />
-                  <Stack.Screen
-                    name={AddActivity}
-                    component={AddActivityScreen}
-                  />
-                </>
+                <Stack.Screen name={Main} component={MainScreen} />
               ) : (
                 <>
                   <Stack.Screen

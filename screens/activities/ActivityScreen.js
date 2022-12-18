@@ -3,11 +3,13 @@ import React from 'react'
 import {
   ActivityDetail,
   ActivityList,
-  AddActivity
+  AddActivity,
+  EditActivity
 } from '../../constants/screens'
 import ActivityDetailScreen from './ActivityDetailScreen'
 import ActivityListScreen from './ActivityListScreen'
 import AddActivityScreen from './AddActivityScreen'
+import EditActivityScreen from './EditActivityScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -17,6 +19,7 @@ export default function ActivityScreen() {
       <Stack.Screen name={ActivityList} component={ActivityListScreen} />
       <Stack.Screen name={ActivityDetail} component={ActivityDetailScreen} />
       <Stack.Screen name={AddActivity} component={AddActivityScreen} />
+      <Stack.Screen name={EditActivity} component={EditActivityScreen} />
     </Stack.Navigator>
   )
 }

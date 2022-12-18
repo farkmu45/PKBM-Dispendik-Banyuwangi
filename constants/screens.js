@@ -8,6 +8,7 @@ export const Activity = 'Activity'
 export const ActivityList = 'ActivityList'
 export const ActivityDetail = 'ActivityDetail'
 export const AddActivity = 'AddActivity'
+export const EditActivity = 'EditActivity'
 
 export const Account = 'Account'
 

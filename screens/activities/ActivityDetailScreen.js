@@ -7,23 +7,20 @@ import {
   Image,
   ScrollView,
   Text,
-  View
+  View,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../../components/Header'
 import colors from '../../constants/colors'
 import api from '../../network/api'
 
-export default function ActivityDetailScreen({ route }) {
+export default function ActivityDetailScreen({ route, navigation }) {
   const tabBarHeight = useBottomTabBarHeight()
   const { activityId } = route.params
 
-  const { isLoading, error, data, refetch } = useQuery({
+  const { isLoading, error, data } = useQuery({
     queryKey: ['activityDetail', activityId],
-    queryFn: async () => {
-      const result = await api.get(`/activities/${activityId}`)
-      return result
-    },
+    queryFn: () => api.get(`/activities/${activityId}`),
   })
 
   if (isLoading)
@@ -43,7 +40,7 @@ export default function ActivityDetailScreen({ route }) {
       [
         {
           text: 'Ya',
-          onPress: refetch,
+          onPress: () => navigation.goBack(),
           style: 'default',
         },
       ]

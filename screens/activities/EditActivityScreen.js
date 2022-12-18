@@ -26,42 +26,52 @@ import themeColors from '../../constants/colors'
 import { Activity, Main } from '../../constants/screens'
 import api from '../../network/api'
 
-export default function AddActivityScreen({ navigation }) {
+export default function EditActivityScreen({ route, navigation }) {
+  const { activityId } = route.params
+
   const { isLoading, error, data } = useQuery({
     queryKey: ['profile'],
     queryFn: () => api.get('/profile'),
   })
 
+  const {
+    isLoading: aLoading,
+    error: aError,
+    data: aData,
+  } = useQuery({
+    queryKey: ['activityDetail', activityId],
+    queryFn: () => api.get(`/activities/${activityId}`),
+  })
+
   const mutation = useMutation({
     mutationFn: (params) =>
-      api.post('/activities', params, {
+      api.post(`/activities/${activityId}?_method=PUT`, params, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }),
-
     onSuccess: (result) => {
       if (result.ok) {
         navigation.replace(Main, { screen: Activity })
-        ToastAndroid.show(
-          'Data aktivitas berhasil ditambahkan',
-          ToastAndroid.SHORT
-        )
-      } else <ErrorModal text='Terjadi kesalahan saat menambahkan data' />
+        ToastAndroid.show('Data aktivitas berhasil diubah', ToastAndroid.SHORT)
+      } else return <ErrorModal text='Terjadi kesalahan saat mengubah data' />
     },
+    onError: () => <ErrorModal text='Terjadi kesalahan saat mengubah data' />,
   })
 
   const onSubmit = (values) => {
     const formData = new FormData()
-
     formData.append('name', values.name)
     formData.append('description', values.description)
     formData.append('date', format(values.date, 'yyyy-MM-dd'))
-    formData.append('picture', {
-      name: 'test',
-      uri: values.image,
-      type: 'image/jpg',
-    })
+
+    if (values.isImageChanged) {
+      formData.append('picture', {
+        name: 'test',
+        uri: values.image,
+        type: 'image/jpg',
+      })
+    }
 
     mutation.mutate(formData)
   }
@@ -85,6 +95,7 @@ export default function AddActivityScreen({ navigation }) {
       })
       if (!result.canceled) {
         setFieldValue('image', result.assets[0].uri)
+        setFieldValue('isImageChanged', true)
       }
     } catch (error) {
       Alert.alert(
@@ -101,7 +112,7 @@ export default function AddActivityScreen({ navigation }) {
     image: Yup.string().required('Wajib diisi'),
   })
 
-  if (isLoading)
+  if (isLoading || aLoading)
     return (
       <SafeAreaView className='flex-1'>
         <Header />
@@ -111,7 +122,7 @@ export default function AddActivityScreen({ navigation }) {
       </SafeAreaView>
     )
 
-  if (error || !data.ok)
+  if (error || !data.ok || aError || !aData.ok)
     return Alert.alert(
       'Kesalahan',
       'Terjadi kesalahan, silahkan ulangi kembali',
@@ -137,10 +148,11 @@ export default function AddActivityScreen({ navigation }) {
 
           <Formik
             initialValues={{
-              name: '',
-              description: '',
-              date: new Date(),
-              image: '',
+              name: aData.data.data.name,
+              description: aData.data.data.description,
+              date: new Date(aData.data.data.date),
+              image: aData.data.data.picture,
+              isImageChanged: false,
             }}
             validationSchema={validationSchema}
             onSubmit={onSubmit}
@@ -224,7 +236,7 @@ export default function AddActivityScreen({ navigation }) {
                   multiline={true}
                   numberOfLines={6}
                 />
-                <Button onPress={handleSubmit}>Kirim</Button>
+                <Button onPress={handleSubmit}>Simpan</Button>
               </View>
             )}
           </Formik>
