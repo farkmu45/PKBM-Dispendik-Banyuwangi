@@ -14,16 +14,22 @@ export default function Header({ showBackButton, style }) {
   const navigation = useNavigation()
   const { setAuth } = useContext(AuthContext)
 
+  const logoutMutation = async () => {
+    const expoToken = await SecureStore.getItemAsync('expoToken')
+    await api.post('/exponent/devices/unsubscribe', {
+      expo_token: expoToken,
+    })
+
+    return api.post('/logout')
+  }
+
   const mutation = useMutation({
-    mutationFn: () => {
-      return api.post('/logout')
-    },
+    mutationFn: logoutMutation,
     onSuccess: async (result) => {
       if (result.ok) {
         setAuth({ signedIn: false })
         await SecureStore.deleteItemAsync('token')
         delete api.headers['Authorization']
-        navigation.replace(UserSelectionScreen)
       } else {
         return Alert.alert(
           'Kesalahan',

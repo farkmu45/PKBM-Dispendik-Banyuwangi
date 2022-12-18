@@ -1,18 +1,17 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import * as Notifications from 'expo-notifications'
 import * as SecureStore from 'expo-secure-store'
 import * as SplashScreen from 'expo-splash-screen'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import {
-  AddActivity,
   ForgotPassword,
   Login,
   Main,
   RegisterUser,
-  UserSelection,
+  UserSelection
 } from './constants/screens'
-import AddActivityScreen from './screens/activities/AddActivityScreen'
 import ForgotPasswordScreen from './screens/auth/ForgotPasswordScreen'
 import LoginScreen from './screens/auth/LoginScreen'
 import RegisterUserScreen from './screens/auth/RegisterUserScreen'
@@ -26,7 +25,7 @@ import {
   Inter_700Bold,
   Inter_800ExtraBold,
   Inter_900Black,
-  useFonts,
+  useFonts
 } from '@expo-google-fonts/inter'
 import { useCallback, useEffect, useState } from 'react'
 import { AuthContext } from './contexts'
@@ -36,6 +35,14 @@ const Stack = createNativeStackNavigator()
 const queryClient = new QueryClient()
 
 DefaultTheme.colors.background = 'white'
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+})
 
 export default function App() {
   const [auth, setAuth] = useState({ isAdmin: false, signedIn: false })

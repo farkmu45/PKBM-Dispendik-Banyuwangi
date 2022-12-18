@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "527325186929",
+    "project_id": "pkbm-dispendik-banyuwangi",
+    "storage_bucket": "pkbm-dispendik-banyuwangi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527325186929:android:40cf47a15930e0f7c884d0",
+        "android_client_info": {
+          "package_name": "com.dispendik_banyuwangi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527325186929-97cnclnmvch1tnqno6mm3jc4cc2qsad1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaKb5oVbZTsNBAh-bgxOWsishlPFraPfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527325186929-97cnclnmvch1tnqno6mm3jc4cc2qsad1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

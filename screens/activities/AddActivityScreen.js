@@ -47,8 +47,13 @@ export default function AddActivityScreen({ navigation }) {
           'Data aktivitas berhasil ditambahkan',
           ToastAndroid.SHORT
         )
-      } else <ErrorModal text='Terjadi kesalahan saat menambahkan data' />
+      } else
+        return <ErrorModal text='Terjadi kesalahan saat menambahkan data' />
     },
+
+    onError: () => (
+      <ErrorModal text='Terjadi kesalahan saat menambahkan data' />
+    ),
   })
 
   const onSubmit = (values) => {

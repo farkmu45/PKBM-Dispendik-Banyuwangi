@@ -28,6 +28,8 @@ import {
 import { AuthContext } from '../../contexts'
 import api from '../../network/api'
 
+import registerForPushNotificationsAsync from '../../registerPushNotificationAsync'
+
 export default function LoginScreen({ route, navigation }) {
   const { isAdmin } = route.params
   const auth = useContext(AuthContext)
@@ -42,8 +44,15 @@ export default function LoginScreen({ route, navigation }) {
         const tokenData = result.data.data.token
         const roleData = result.data.data.role_id
         api.setHeader('Authorization', `Bearer ${tokenData}`)
+        const expoToken = await registerForPushNotificationsAsync()
+
+        const subscribe = await api.post('/exponent/devices/subscribe', {
+          expo_token: expoToken,
+        })
+
         await SecureStore.setItemAsync('token', tokenData)
         await SecureStore.setItemAsync('role', roleData)
+        await SecureStore.setItemAsync('expoToken', expoToken)
 
         auth.setAuth({ signedIn: true, isAdmin: roleData == 1 ? false : true })
 
