@@ -8,14 +8,14 @@ import colors from '../constants/colors'
 import {
   Account,
   Activity,
+  ActivityNow,
   Home,
-  Institution,
-  NotificationList,
+  Institution
 } from '../constants/screens'
 import AccountScreen from './account/AccountScreen'
+import ActivityNowScreen from './activities/ActivityNowScreen'
 import ActivityScreen from './activities/ActivityScreen'
 import InstitutionScreen from './institutions/InstitutionScreen'
-import NotificationListScreen from './notifications/NotificationListScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -55,8 +55,8 @@ export default function MainScreen() {
         }}
       />
       <Tab.Screen
-        name={NotificationList}
-        component={NotificationListScreen}
+        name={ActivityNow}
+        component={ActivityNowScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name='notifications' size={24} color={color} />

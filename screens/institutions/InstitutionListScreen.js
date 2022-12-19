@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Image,
   Pressable,
   Text,
   ToastAndroid,
@@ -102,6 +103,18 @@ export default function InstitutionListScreen({ navigation }) {
             refreshing={isLoading}
             onRefresh={() => refetch()}
             keyExtractor={(item) => item.id}
+            ListEmptyComponent={
+              <View className='flex-1 items-center'>
+                <Image
+                  resizeMode='contain'
+                  className='w-[300] h-[300] mt-5'
+                  source={require('../../assets/nodata.png')}
+                />
+                <Text className='text-xl text-gray-400 font-Medium'>
+                  Tidak ada data
+                </Text>
+              </View>
+            }
             renderItem={({ item }) => (
               <Item
                 item={item}
