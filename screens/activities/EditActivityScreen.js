@@ -54,9 +54,9 @@ export default function EditActivityScreen({ route, navigation }) {
       if (result.ok) {
         navigation.replace(Main, { screen: Activity })
         ToastAndroid.show('Data aktivitas berhasil diubah', ToastAndroid.SHORT)
-      } else return <ErrorModal text='Terjadi kesalahan saat mengubah data' />
+      } else return ErrorModal('Terjadi kesalahan saat mengubah data')
     },
-    onError: () => <ErrorModal text='Terjadi kesalahan saat mengubah data' />,
+    onError: () => ErrorModal('Terjadi kesalahan saat mengubah data'),
   })
 
   const onSubmit = (values) => {

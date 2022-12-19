@@ -39,9 +39,7 @@ export default function InstitutionListScreen({ navigation }) {
     onSuccess: async (result) => {
       if (result.ok) {
         ToastAndroid.show('Data institusi berhasil dihapus', ToastAndroid.SHORT)
-      } else {
-        return <ErrorModal />
-      }
+      } else return ErrorModal('Terjadi kesalahan saat menghapus institusi')
     },
   })
 
