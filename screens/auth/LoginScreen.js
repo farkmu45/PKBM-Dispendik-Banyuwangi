@@ -36,15 +36,16 @@ export default function LoginScreen({ route, navigation }) {
   const auth = useContext(AuthContext)
 
   const mutation = useMutation({
-    mutationFn: (params) => api.post('/login', params),
+    mutationFn: (params) => {
+      return api.post('/login', params)
+    },
     onSuccess: async (result) => {
       if (result.ok) {
         const tokenData = result.data.data.token
         const roleData = result.data.data.role_id
         api.setHeader('Authorization', `Bearer ${tokenData}`)
         const expoToken = await registerForPushNotificationsAsync()
-
-        const subscribe = await api.post('/exponent/devices/subscribe', {
+        await api.post('/exponent/devices/subscribe', {
           expo_token: expoToken,
         })
 
@@ -56,7 +57,7 @@ export default function LoginScreen({ route, navigation }) {
 
         navigation.replace(Main, { screen: Home })
       } else
-        return ErrorModal(
+        ErrorModal(
           'Terjadi kesalahan saat login, silahkan cek email dan password anda kembali'
         )
     },

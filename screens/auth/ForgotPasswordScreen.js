@@ -33,7 +33,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           'Link reset password berhasil dikirimkan ke email anda',
           ToastAndroid.SHORT
         )
-      } else return ErrorModal('Terjadi kesalahan, silahkan cek email kembali')
+      } else ErrorModal('Terjadi kesalahan, silahkan cek email kembali')
     },
     onError: () => ErrorModal('Terjadi kesalahan, silahkan cek email kembali'),
   })

@@ -21,6 +21,7 @@ import * as Yup from 'yup'
 import Button from '../../components/Button'
 import ErrorModal from '../../components/ErrorModal'
 import Input from '../../components/Input'
+import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
 import { Login } from '../../constants/screens'
 import api from '../../network/api'
@@ -63,9 +64,7 @@ export default function RegisterUserScreen({ navigation }) {
   })
 
   const mutation = useMutation({
-    mutationFn: (params) => {
-      return api.post('/register', params)
-    },
+    mutationFn: (params) => api.post('/register', params),
     onSuccess: (result) => {
       if (result.ok) {
         ToastAndroid.show(
@@ -73,7 +72,7 @@ export default function RegisterUserScreen({ navigation }) {
           ToastAndroid.SHORT
         )
         navigation.replace(Login, { isAdmin: false })
-      } else return ErrorModal('Terjadi kesalahan, silahkan ulangi kembali')
+      } else ErrorModal('Terjadi kesalahan, silahkan ulangi kembali')
     },
 
     onError: () => ErrorModal('Terjadi kesalahan, silahkan ulangi kembali'),
@@ -85,7 +84,6 @@ export default function RegisterUserScreen({ navigation }) {
       date_of_birth: format(date, 'yyyy-MM-dd'),
       institution_id: institution,
     }
-    console.log(formatted)
     mutation.mutate(formatted)
   }
 

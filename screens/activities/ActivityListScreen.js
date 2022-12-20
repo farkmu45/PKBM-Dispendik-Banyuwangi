@@ -34,7 +34,7 @@ import api from '../../network/api'
 
 export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState('')
-  const [showModal, setShowModal] = useState(showModal)
+  const [showModal, setShowModal] = useState(false)
   const { auth } = useContext(AuthContext)
   let mountedOn
 
@@ -85,9 +85,7 @@ export default function ActivityListScreen({ navigation }) {
       if (result.ok) {
         ToastAndroid.show('Data kegiatan berhasil dihapus', ToastAndroid.SHORT)
         refetch()
-      } else {
-        return ErrorModal('Terjadi kesalahan saat menghapus data kegiatan')
-      }
+      } else ErrorModal('Terjadi kesalahan saat menghapus data kegiatan')
     },
 
     onError: () => ErrorModal('Terjadi kesalahan saat menghapus data kegiatan'),
@@ -108,16 +106,6 @@ export default function ActivityListScreen({ navigation }) {
       onChange,
       mode: 'date',
     })
-  }
-
-  const pickerRef = useRef()
-
-  function open() {
-    pickerRef.current.focus()
-  }
-
-  function close() {
-    pickerRef.current.blur()
   }
 
   const downloadDoc = (type) => {

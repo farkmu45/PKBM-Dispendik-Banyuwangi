@@ -10,7 +10,7 @@ import {
   Pressable,
   Text,
   ToastAndroid,
-  View,
+  View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FAB from '../../components/FAB'
@@ -35,7 +35,7 @@ export default function InstitutionListScreen({ navigation }) {
       if (result.ok) {
         ToastAndroid.show('Data institusi berhasil dihapus', ToastAndroid.SHORT)
         refetch()
-      } else return ErrorModal('Terjadi kesalahan saat menghapus institusi')
+      } else ErrorModal('Terjadi kesalahan saat menghapus institusi')
     },
 
     onError: () => ErrorModal('Terjadi kesalahan saat menghapus institusi'),

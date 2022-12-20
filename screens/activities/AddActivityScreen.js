@@ -47,7 +47,7 @@ export default function AddActivityScreen({ navigation }) {
           'Data aktivitas berhasil ditambahkan',
           ToastAndroid.SHORT
         )
-      } else return ErrorModal()
+      } else ErrorModal()
     },
 
     onError: () => ErrorModal(),

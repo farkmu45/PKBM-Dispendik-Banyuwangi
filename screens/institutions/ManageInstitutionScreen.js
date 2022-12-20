@@ -33,7 +33,7 @@ export default function ManageInstitutionScreen({ route, navigation }) {
         )
 
         navigation.replace(Main, { screen: Institution })
-      } else return ErrorModal()
+      } else ErrorModal()
     },
 
     onError: () => ErrorModal(),
