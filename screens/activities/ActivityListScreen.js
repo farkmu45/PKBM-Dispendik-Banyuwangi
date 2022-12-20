@@ -1,14 +1,16 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
+import { Picker } from '@react-native-picker/picker'
 import { useNavigation } from '@react-navigation/native'
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
   FlatList,
   Image,
+  Linking,
   Pressable,
   Text,
   ToastAndroid,
@@ -32,6 +34,11 @@ import api from '../../network/api'
 export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState('')
   const { auth } = useContext(AuthContext)
+  let mountedOn
+
+  useEffect(() => {
+    mountedOn = Date.now()
+  })
 
   const fetchActivities = async ({ pageParam = 0 }) => {
     let result = await api.get(`/activities?page=${pageParam}`)
@@ -78,11 +85,11 @@ export default function ActivityListScreen({ navigation }) {
       if (result.ok) {
         ToastAndroid.show('Data kegiatan berhasil dihapus', ToastAndroid.SHORT)
       } else {
-        return <ErrorModal text='Terjadi kesalahan saat menghapus data' />
+        return ErrorModal('Terjadi kesalahan saat menghapus data kegiatan')
       }
     },
 
-    onError: () => <ErrorModal text='Terjadi kesalahan saat menghapus data' />,
+    onError: () => ErrorModal('Terjadi kesalahan saat menghapus data kegiatan'),
   })
 
   const onChange = (event, selectedDate) => {
@@ -97,6 +104,30 @@ export default function ActivityListScreen({ navigation }) {
       onChange,
       mode: 'date',
     })
+  }
+
+  const pickerRef = useRef()
+
+  function open() {
+    pickerRef.current.focus()
+  }
+
+  function close() {
+    pickerRef.current.blur()
+  }
+
+  const downloadDoc = (type) => {
+    const token = api.headers['Authorization'].replace('Bearer ', '')
+    let url = `${api.getBaseURL()}/recap?_token=${token}&type=${type}`
+
+    try {
+      Linking.openURL(url)
+    } catch (error) {
+      ToastAndroid.show(
+        'Terjadi kesalahan saat mengunduh dokumen',
+        ToastAndroid.SHORT
+      )
+    }
   }
 
   const deleteItem = (id) =>
@@ -151,7 +182,7 @@ export default function ActivityListScreen({ navigation }) {
 
                 <View
                   onTouchStart={showDatePicker}
-                  className='border-[1px] border-gray-400 mt-6 px-3 py-2 rounded-full'
+                  className='border-[1px] border-gray-400 mt-3 px-3 py-2 rounded-full'
                 >
                   <Text className='text-base font-Regular text-gray-500'>
                     {date
@@ -160,13 +191,48 @@ export default function ActivityListScreen({ navigation }) {
                   </Text>
                 </View>
 
-                <Button
-                  className='mt-3 self-end'
-                  outline={true}
-                  onPress={() => setDate('')}
+                <Picker
+                  ref={pickerRef}
+                  style={{ display: 'none' }}
+                  mode='dialog'
+                  selectedValue={null}
+                  onValueChange={(itemValue, itemIndex) => {
+                    if (Date.now() - mountedOn > 400) {
+                      downloadDoc(itemValue)
+                    }
+                  }}
                 >
-                  Hapus filter
-                </Button>
+                  <Picker.Item label='Rekap Mingguan' value='weekly' />
+                  <Picker.Item label='Rekap Bulanan' value='monthly' />
+                  <Picker.Item label='Rekap Tahunan' value='yearly' />
+                </Picker>
+
+                <View className='flex-row mt-3'>
+                  <View className='rounded-full ml-auto mr-1'>
+                    <Pressable
+                      className='px-3 py-2 flex-row items-center'
+                      android_ripple={{ borderless: true }}
+                      onPress={open}
+                    >
+                      <MaterialIcons
+                        name='file-download'
+                        size={25}
+                        color='black'
+                      />
+                      <Text className='font-Regular text-base ml-2'>
+                        Unduh Rekap
+                      </Text>
+                    </Pressable>
+                  </View>
+
+                  <Button
+                    className=''
+                    outline={true}
+                    onPress={() => setDate('')}
+                  >
+                    Hapus filter
+                  </Button>
+                </View>
               </View>
             )}
             progressViewOffset={50}
@@ -200,10 +266,12 @@ export default function ActivityListScreen({ navigation }) {
             )}
           />
           {!auth.isAdmin ? (
-            <FAB
-              iconName='add'
-              onPress={() => navigation.navigate(AddActivity)}
-            />
+            <>
+              <FAB
+                iconName='add'
+                onPress={() => navigation.navigate(AddActivity)}
+              />
+            </>
           ) : null}
         </>
       )}
