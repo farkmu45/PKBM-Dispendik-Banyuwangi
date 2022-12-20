@@ -13,12 +13,13 @@ import {
   Pressable,
   ScrollView,
   ToastAndroid,
-  View
+  View,
 } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
 import Button from '../../components/Button'
+import ErrorModal from '../../components/ErrorModal'
 import Input from '../../components/Input'
 import colors from '../../constants/colors'
 import { Login } from '../../constants/screens'
@@ -62,25 +63,20 @@ export default function RegisterUserScreen({ navigation }) {
   })
 
   const mutation = useMutation({
-    mutationFn: async (params) => {
-      const result = await api.post('/register', params)
-      return result
+    mutationFn: (params) => {
+      return api.post('/register', params)
     },
-    onSuccess: async (result) => {
+    onSuccess: (result) => {
       if (result.ok) {
         ToastAndroid.show(
           'Berhasil mendaftar, silahkan login',
           ToastAndroid.SHORT
         )
         navigation.replace(Login, { isAdmin: false })
-      } else {
-        Alert.alert(
-          'Kesalahan',
-          'Terjadi kesalahan saat menambahkan data, silahkan ulangi kembali',
-          [{ text: 'OK' }]
-        )
-      }
+      } else return ErrorModal('Terjadi kesalahan, silahkan ulangi kembali')
     },
+
+    onError: () => ErrorModal('Terjadi kesalahan, silahkan ulangi kembali'),
   })
 
   const onSubmit = (values) => {
@@ -114,7 +110,7 @@ export default function RegisterUserScreen({ navigation }) {
     password_confirmation: Yup.string()
       .required('Wajib diisi')
       .oneOf([Yup.ref('password')], 'Password tidak sesuai'),
-    phone_number: Yup.string().required('Wajib diisi')
+    phone_number: Yup.string().required('Wajib diisi'),
   })
 
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
@@ -132,7 +128,7 @@ export default function RegisterUserScreen({ navigation }) {
     <SafeAreaView className='flex-1 bg-primary-100'>
       <StatusBar backgroundColor='transparent' style='dark' />
       {mutation.isLoading ? <LoadingModal /> : null}
-      {error || !data.ok || mutation.error ? (
+      {error || !data.ok ? (
         Alert.alert('Kesalahan', 'Terjadi kesalahan, silahkan ulangi kembali', [
           {
             text: 'Ya',

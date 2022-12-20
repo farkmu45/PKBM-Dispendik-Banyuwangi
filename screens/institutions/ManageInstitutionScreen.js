@@ -25,7 +25,7 @@ export default function ManageInstitutionScreen({ route, navigation }) {
       }
       return result
     },
-    onSuccess: async (result) => {
+    onSuccess: (result) => {
       if (result.ok) {
         ToastAndroid.show(
           'Data institusi berhasil disimpan',
@@ -35,6 +35,8 @@ export default function ManageInstitutionScreen({ route, navigation }) {
         navigation.replace(Main, { screen: Institution })
       } else return ErrorModal()
     },
+
+    onError: () => ErrorModal(),
   })
 
   const validationSchema = Yup.object().shape({
@@ -43,7 +45,6 @@ export default function ManageInstitutionScreen({ route, navigation }) {
 
   return (
     <SafeAreaView>
-      {mutation.error ? <ErrorModal /> : null}
       {mutation.isLoading ? <LoadingModal /> : null}
       <Header showBackButton={true} />
 

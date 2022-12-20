@@ -2,16 +2,15 @@ import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { format, parse } from 'date-fns'
 import { Formik } from 'formik'
-import React, { useState } from 'react'
+import React from 'react'
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  Text,
-  ToastAndroid,
-  View,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    Text,
+    ToastAndroid,
+    View
 } from 'react-native'
-import DropDownPicker from 'react-native-dropdown-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
 import Button from '../../components/Button'
@@ -22,33 +21,10 @@ import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
 import api from '../../network/api'
 
-export default function AccountScreen() {
-  const [open, setOpen] = useState(false)
-  const [items, setItems] = useState([])
-
+export default function AdminAccountScreen() {
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ['profile'],
+    queryKey: ['profileAdmin'],
     queryFn: () => api.get('/profile'),
-  })
-
-  const {
-    isLoading: loadingIn,
-    error: errorIn,
-    data: dataIn,
-    refetch: refetchIn,
-  } = useQuery({
-    queryKey: ['institutionData'],
-    queryFn: () => api.get('/institutions'),
-    onSuccess: (result) => {
-      if (!error && result.ok) {
-        const mapped = result.data.data.map((item) => ({
-          label: item.name,
-          value: item.id,
-        }))
-
-        setItems(mapped)
-      }
-    },
   })
 
   const mutation = useMutation({
@@ -88,10 +64,9 @@ export default function AccountScreen() {
     email: Yup.string().email('Email tidak valid').required('Wajib diisi'),
     date_of_birth: Yup.date().required('Wajib diisi'),
     phone_number: Yup.string().required('Wajib diisi'),
-    institution_id: Yup.string().required('Wajib diisi'),
   })
 
-  if (isLoading || loadingIn) {
+  if (isLoading) {
     return (
       <SafeAreaView className='flex-1'>
         <Header />
@@ -106,13 +81,12 @@ export default function AccountScreen() {
     <SafeAreaView className='flex-1'>
       <Header />
       {mutation.isLoading ? <LoadingModal /> : null}
-      {error || errorIn || !data.ok || !dataIn.ok ? (
+      {error ||  !data.ok ? (
         Alert.alert('Kesalahan', 'Terjadi kesalahan, silahkan ulangi kembali', [
           {
             text: 'Ya',
             onPress: () => {
               refetch()
-              refetchIn()
             },
             style: 'default',
           },
@@ -187,29 +161,6 @@ export default function AccountScreen() {
                     }
                     onBlur={handleBlur('phone_number')}
                     value={values.phone_number}
-                  />
-
-                  <DropDownPicker
-                    open={open}
-                    value={values.institution_id}
-                    items={items}
-                    searchable={true}
-                    listMode={'MODAL'}
-                    setOpen={setOpen}
-                    setValue={(value) =>
-                      setFieldValue('institution_id', value())
-                    }
-                    placeholder='Lembaga'
-                    setItems={setItems}
-                    containerStyle={{
-                      marginTop: 10,
-                      marginBottom: 20,
-                    }}
-                    language='ID'
-                    className='border-0 rounded-none border-b-2 p-0 border-gray-400 bg-primary-100'
-                    textStyle={{
-                      fontSize: 16,
-                    }}
                   />
 
                   <Button className='mt-5' onPress={handleSubmit}>

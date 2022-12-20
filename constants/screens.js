@@ -11,8 +11,8 @@ export const AddActivity = 'AddActivity'
 export const EditActivity = 'EditActivity'
 export const ActivityNow = 'ActivityNow'
 
-
 export const Account = 'Account'
+export const AdminAccount = 'AdminAccount'
 
 export const Login = 'Login'
 export const ForgotPassword = 'ForgotPassword'

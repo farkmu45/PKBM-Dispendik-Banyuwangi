@@ -39,6 +39,7 @@ export default function EditActivityScreen({ route, navigation }) {
     error: aError,
     data: aData,
   } = useQuery({
+    cacheTime: 0,
     queryKey: ['activityDetail', activityId],
     queryFn: () => api.get(`/activities/${activityId}`),
   })

@@ -11,6 +11,7 @@ import {
   FlatList,
   Image,
   Linking,
+  Modal,
   Pressable,
   Text,
   ToastAndroid,
@@ -33,6 +34,7 @@ import api from '../../network/api'
 
 export default function ActivityListScreen({ navigation }) {
   const [date, setDate] = useState('')
+  const [showModal, setShowModal] = useState(showModal)
   const { auth } = useContext(AuthContext)
   let mountedOn
 
@@ -78,12 +80,11 @@ export default function ActivityListScreen({ navigation }) {
 
   // Delete mutation
   const mutation = useMutation({
-    mutationFn: async (params) => {
-      return api.delete(`/activities/${params.id}`)
-    },
+    mutationFn: (params) => api.delete(`/activities/${params.id}`),
     onSuccess: (result) => {
       if (result.ok) {
         ToastAndroid.show('Data kegiatan berhasil dihapus', ToastAndroid.SHORT)
+        refetch()
       } else {
         return ErrorModal('Terjadi kesalahan saat menghapus data kegiatan')
       }
@@ -95,7 +96,10 @@ export default function ActivityListScreen({ navigation }) {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate
     setDate(currentDate)
-    refetch()
+
+    setTimeout(() => {
+      refetch()
+    }, 500)
   }
 
   const showDatePicker = () => {
@@ -191,44 +195,79 @@ export default function ActivityListScreen({ navigation }) {
                   </Text>
                 </View>
 
-                <Picker
-                  ref={pickerRef}
-                  style={{ display: 'none' }}
-                  mode='dialog'
-                  selectedValue={null}
-                  onValueChange={(itemValue, itemIndex) => {
-                    if (Date.now() - mountedOn > 400) {
-                      downloadDoc(itemValue)
-                    }
-                  }}
-                >
-                  <Picker.Item label='Rekap Mingguan' value='weekly' />
-                  <Picker.Item label='Rekap Bulanan' value='monthly' />
-                  <Picker.Item label='Rekap Tahunan' value='yearly' />
-                </Picker>
-
-                <View className='flex-row mt-3'>
-                  <View className='rounded-full ml-auto mr-1'>
+                {!auth.isAdmin && (
+                  <Modal
+                    visible={showModal}
+                    transparent={true}
+                    animationType='fade'
+                    statusBarTranslucent={true}
+                  >
                     <Pressable
-                      className='px-3 py-2 flex-row items-center'
-                      android_ripple={{ borderless: true }}
-                      onPress={open}
+                      onPress={() => setShowModal(false)}
+                      className='flex-1 bg-black/30 justify-center z-30 px-10'
                     >
-                      <MaterialIcons
-                        name='file-download'
-                        size={25}
-                        color='black'
-                      />
-                      <Text className='font-Regular text-base ml-2'>
-                        Unduh Rekap
-                      </Text>
+                      <View className='bg-white rounded-md'>
+                        <Pressable
+                          className='p-5'
+                          android_ripple={{ borderless: false }}
+                          onPress={() => downloadDoc('weekly')}
+                        >
+                          <Text className='font-Regular text-base'>
+                            Rekap Mingguan
+                          </Text>
+                        </Pressable>
+                        <Pressable
+                          className='p-5'
+                          android_ripple={{ borderless: false }}
+                          onPress={() => downloadDoc('monthly')}
+                        >
+                          <Text className='font-Regular text-base'>
+                            Rekap Bulanan
+                          </Text>
+                        </Pressable>
+                        <Pressable
+                          className='p-5'
+                          android_ripple={{ borderless: false }}
+                          onPress={() => downloadDoc('yearly')}
+                        >
+                          <Text className='font-Regular text-base'>
+                            Rekap Tahunan
+                          </Text>
+                        </Pressable>
+                      </View>
                     </Pressable>
-                  </View>
+                  </Modal>
+                )}
+
+                <View className='flex-row mt-3 justify-end'>
+                  {!auth.isAdmin && (
+                    <View className='rounded-full mr-1'>
+                      <Pressable
+                        className='px-3 py-2 flex-row items-center'
+                        android_ripple={{ borderless: true }}
+                        onPress={() => setShowModal(true)}
+                      >
+                        <MaterialIcons
+                          name='file-download'
+                          size={25}
+                          color='black'
+                        />
+                        <Text className='font-Regular text-base ml-2'>
+                          Unduh Rekap
+                        </Text>
+                      </Pressable>
+                    </View>
+                  )}
 
                   <Button
                     className=''
                     outline={true}
-                    onPress={() => setDate('')}
+                    onPress={() => {
+                      setDate('')
+                      setTimeout(() => {
+                        refetch()
+                      }, 500)
+                    }}
                   >
                     Hapus filter
                   </Button>
@@ -300,29 +339,37 @@ function Item({ activity, deleteFunc }) {
           </View>
 
           <View className='block ml-auto flex-row items-center gap-x-2'>
-            <View className='bg-yellow-600 rounded-lg'>
-              <Pressable
-                className='p-2'
-                android_ripple={{ borderless: true }}
-                onPress={() => {
-                  navigation.navigate(EditActivity, {
-                    activityId: activity.id,
-                  })
-                }}
-              >
-                <MaterialIcons name='edit' size={20} color='white' />
-              </Pressable>
-            </View>
+            {activity.is_owner && (
+              <>
+                <View className='bg-yellow-600 rounded-lg mr-2'>
+                  <Pressable
+                    className='p-2'
+                    android_ripple={{ borderless: true }}
+                    onPress={() => {
+                      navigation.navigate(EditActivity, {
+                        activityId: activity.id,
+                      })
+                    }}
+                  >
+                    <MaterialIcons name='edit' size={20} color='white' />
+                  </Pressable>
+                </View>
 
-            <View className='rounded-lg bg-red-600'>
-              <Pressable
-                className='p-2'
-                android_ripple={{ borderless: true }}
-                onPress={deleteFunc}
-              >
-                <MaterialIcons name='delete-outline' size={20} color='white' />
-              </Pressable>
-            </View>
+                <View className='rounded-lg bg-red-600'>
+                  <Pressable
+                    className='p-2'
+                    android_ripple={{ borderless: true }}
+                    onPress={deleteFunc}
+                  >
+                    <MaterialIcons
+                      name='delete-outline'
+                      size={20}
+                      color='white'
+                    />
+                  </Pressable>
+                </View>
+              </>
+            )}
 
             <MaterialIcons
               name='keyboard-arrow-right'

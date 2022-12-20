@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
 import Button from '../../components/Button'
+import ErrorModal from '../../components/ErrorModal'
 import Input from '../../components/Input'
 import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
@@ -24,10 +25,7 @@ export default function ForgotPasswordScreen({ navigation }) {
   NavigationBar.setBackgroundColorAsync(colors.primary[100])
 
   const mutation = useMutation({
-    mutationFn: (params) => {
-      const result = api.post('/forgot-password', params)
-      return result
-    },
+    mutationFn: (params) => api.post('/forgot-password', params),
     onSuccess: (result) => {
       if (result.ok) {
         navigation.replace(Login, { isAdmin: false })
@@ -35,20 +33,9 @@ export default function ForgotPasswordScreen({ navigation }) {
           'Link reset password berhasil dikirimkan ke email anda',
           ToastAndroid.SHORT
         )
-      } else {
-        return Alert.alert(
-          'Kesalahan',
-          'Terjadi kesalahan, silahkan cek email kembali',
-          [{ text: 'OK' }]
-        )
-      }
+      } else return ErrorModal('Terjadi kesalahan, silahkan cek email kembali')
     },
-    onError: (error) =>
-      Alert.alert(
-        'Kesalahan',
-        'Terjadi kesalahan, silahkan cek email kembali',
-        [{ text: 'OK' }]
-      ),
+    onError: () => ErrorModal('Terjadi kesalahan, silahkan cek email kembali'),
   })
 
   const validationSchema = Yup.object().shape({

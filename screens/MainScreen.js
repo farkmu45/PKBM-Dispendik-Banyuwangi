@@ -1,7 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import * as NavigationBar from 'expo-navigation-bar'
-import React from 'react'
+import React, { useContext } from 'react'
 import HomeScreen from './HomeScreen'
 
 import colors from '../constants/colors'
@@ -9,18 +9,23 @@ import {
   Account,
   Activity,
   ActivityNow,
+  AdminAccount,
   Home,
-  Institution
+  Institution,
 } from '../constants/screens'
 import AccountScreen from './account/AccountScreen'
 import ActivityNowScreen from './activities/ActivityNowScreen'
 import ActivityScreen from './activities/ActivityScreen'
 import InstitutionScreen from './institutions/InstitutionScreen'
+import { AuthContext } from '../contexts'
+import AdminAccountScreen from './account/AdminAccountScreen'
 
 const Tab = createBottomTabNavigator()
 
 export default function MainScreen() {
   NavigationBar.setBackgroundColorAsync(colors.primary[700])
+
+  const { auth } = useContext(AuthContext)
 
   return (
     <Tab.Navigator
@@ -72,15 +77,28 @@ export default function MainScreen() {
           ),
         }}
       />
-      <Tab.Screen
-        name={Account}
-        component={AccountScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name='person' size={24} color={color} />
-          ),
-        }}
-      />
+
+      {auth.isAdmin ? (
+        <Tab.Screen
+          name={AdminAccount}
+          component={AdminAccountScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name='person' size={24} color={color} />
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name={Account}
+          component={AccountScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name='person' size={24} color={color} />
+            ),
+          }}
+        />
+      )}
     </Tab.Navigator>
   )
 }

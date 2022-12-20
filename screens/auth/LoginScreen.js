@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Yup from 'yup'
 import Button from '../../components/Button'
+import ErrorModal from '../../components/ErrorModal'
 import Input from '../../components/Input'
 import LoadingModal from '../../components/LoadingModal'
 import colors from '../../constants/colors'
@@ -35,10 +36,7 @@ export default function LoginScreen({ route, navigation }) {
   const auth = useContext(AuthContext)
 
   const mutation = useMutation({
-    mutationFn: async (params) => {
-      const result = await api.post('/login', params)
-      return result
-    },
+    mutationFn: (params) => api.post('/login', params),
     onSuccess: async (result) => {
       if (result.ok) {
         const tokenData = result.data.data.token
@@ -57,14 +55,16 @@ export default function LoginScreen({ route, navigation }) {
         auth.setAuth({ signedIn: true, isAdmin: roleData == 1 ? false : true })
 
         navigation.replace(Main, { screen: Home })
-      } else {
-        return Alert.alert(
-          'Kesalahan',
-          'Terjadi kesalahan saat login, silahkan cek email dan password kembali',
-          [{ text: 'OK' }]
+      } else
+        return ErrorModal(
+          'Terjadi kesalahan saat login, silahkan cek email dan password anda kembali'
         )
-      }
     },
+
+    onError: () =>
+      ErrorModal(
+        'Terjadi kesalahan saat login, silahkan cek email dan password anda kembali'
+      ),
   })
 
   const onSubmit = (values) => {
@@ -82,14 +82,6 @@ export default function LoginScreen({ route, navigation }) {
     <SafeAreaView className='bg-primary-100 flex-1'>
       <StatusBar backgroundColor='transparent' style='dark' />
       <ScrollView>
-        {mutation.error
-          ? Alert.alert(
-              'Kesalahan',
-              'Terjadi kesalahan saat login, silahkan cek email dan password kembali',
-              [{ text: 'OK' }]
-            )
-          : null}
-
         {mutation.isLoading ? <LoadingModal /> : null}
 
         <View className='px-5 items-center py-10'>

@@ -26,22 +26,19 @@ export default function InstitutionListScreen({ navigation }) {
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['institutionData'],
-    queryFn: async () => {
-      const result = await api.get('/institutions')
-      return result
-    },
+    queryFn: () => api.get('/institutions'),
   })
 
   const mutation = useMutation({
-    mutationFn: async (params) => {
-      const result = await api.delete(`/institutions/${params.id}`)
-      return result
-    },
-    onSuccess: async (result) => {
+    mutationFn: (params) => api.delete(`/institutions/${params.id}`),
+    onSuccess: (result) => {
       if (result.ok) {
         ToastAndroid.show('Data institusi berhasil dihapus', ToastAndroid.SHORT)
+        refetch()
       } else return ErrorModal('Terjadi kesalahan saat menghapus institusi')
     },
+
+    onError: () => ErrorModal('Terjadi kesalahan saat menghapus institusi'),
   })
 
   const deleteItem = (id) =>
@@ -76,7 +73,7 @@ export default function InstitutionListScreen({ navigation }) {
     <SafeAreaView className='flex-1'>
       {mutation.isLoading && <LoadingModal />}
 
-      {error || !data.ok || mutation.isError ? (
+      {error || !data.ok ? (
         Alert.alert(
           'Kesalahan',
           'Terjadi kesalahan saat, silahkan ulangi kembali',
