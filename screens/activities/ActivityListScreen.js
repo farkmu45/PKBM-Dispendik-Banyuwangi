@@ -1,10 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
-import { Picker } from '@react-native-picker/picker'
 import { useNavigation } from '@react-navigation/native'
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -15,7 +14,7 @@ import {
   Pressable,
   Text,
   ToastAndroid,
-  View,
+  View
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '../../components/Button'
@@ -27,7 +26,7 @@ import colors from '../../constants/colors'
 import {
   ActivityDetail,
   AddActivity,
-  EditActivity,
+  EditActivity
 } from '../../constants/screens'
 import { AuthContext } from '../../contexts'
 import api from '../../network/api'
@@ -183,69 +182,65 @@ export default function ActivityListScreen({ navigation }) {
                   </Text>
                 </View>
 
-                {!auth.isAdmin && (
-                  <Modal
-                    visible={showModal}
-                    transparent={true}
-                    animationType='fade'
-                    statusBarTranslucent={true}
+                <Modal
+                  visible={showModal}
+                  transparent={true}
+                  animationType='fade'
+                  statusBarTranslucent={true}
+                >
+                  <Pressable
+                    onPress={() => setShowModal(false)}
+                    className='flex-1 bg-black/30 justify-center z-30 px-10'
                   >
-                    <Pressable
-                      onPress={() => setShowModal(false)}
-                      className='flex-1 bg-black/30 justify-center z-30 px-10'
-                    >
-                      <View className='bg-white rounded-md'>
-                        <Pressable
-                          className='p-5'
-                          android_ripple={{ borderless: false }}
-                          onPress={() => downloadDoc('weekly')}
-                        >
-                          <Text className='font-Regular text-base'>
-                            Rekap Mingguan
-                          </Text>
-                        </Pressable>
-                        <Pressable
-                          className='p-5'
-                          android_ripple={{ borderless: false }}
-                          onPress={() => downloadDoc('monthly')}
-                        >
-                          <Text className='font-Regular text-base'>
-                            Rekap Bulanan
-                          </Text>
-                        </Pressable>
-                        <Pressable
-                          className='p-5'
-                          android_ripple={{ borderless: false }}
-                          onPress={() => downloadDoc('yearly')}
-                        >
-                          <Text className='font-Regular text-base'>
-                            Rekap Tahunan
-                          </Text>
-                        </Pressable>
-                      </View>
-                    </Pressable>
-                  </Modal>
-                )}
-
-                <View className='flex-row mt-3 justify-end'>
-                  {!auth.isAdmin && (
-                    <View className='rounded-full mr-1'>
+                    <View className='bg-white rounded-md'>
                       <Pressable
-                        className='px-3 py-2 flex-row items-center'
-                        android_ripple={{ borderless: true }}
-                        onPress={() => setShowModal(true)}
+                        className='p-5'
+                        android_ripple={{ borderless: false }}
+                        onPress={() => downloadDoc('weekly')}
                       >
-                        <MaterialIcons
-                          name='file-download'
-                          size={25}
-                          color='black'
-                        />
-                        <Text className='font-Regular text-base ml-2'>
-                          Unduh Rekap
+                        <Text className='font-Regular text-base'>
+                          Rekap Mingguan
+                        </Text>
+                      </Pressable>
+                      <Pressable
+                        className='p-5'
+                        android_ripple={{ borderless: false }}
+                        onPress={() => downloadDoc('monthly')}
+                      >
+                        <Text className='font-Regular text-base'>
+                          Rekap Bulanan
+                        </Text>
+                      </Pressable>
+                      <Pressable
+                        className='p-5'
+                        android_ripple={{ borderless: false }}
+                        onPress={() => downloadDoc('yearly')}
+                      >
+                        <Text className='font-Regular text-base'>
+                          Rekap Tahunan
                         </Text>
                       </Pressable>
                     </View>
-                  )}
+                  </Pressable>
+                </Modal>
+
+                <View className='flex-row mt-3 justify-end'>
+                  <View className='rounded-full mr-1'>
+                    <Pressable
+                      className='px-3 py-2 flex-row items-center'
+                      android_ripple={{ borderless: true }}
+                      onPress={() => setShowModal(true)}
+                    >
+                      <MaterialIcons
+                        name='file-download'
+                        size={25}
+                        color='black'
+                      />
+                      <Text className='font-Regular text-base ml-2'>
+                        Unduh Rekap
+                      </Text>
+                    </Pressable>
+                  </View>
 
                   <Button
                     className=''
